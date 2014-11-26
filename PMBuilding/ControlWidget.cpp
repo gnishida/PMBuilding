@@ -10,9 +10,10 @@ ControlWidget::ControlWidget(MainWindow* mainWin) : QDockWidget("Control Widget"
 	// set up the UI
 	ui.setupUi(this);
 
-	ui.lineEditColorRed->setText("255");
-	ui.lineEditColorGreen->setText("255");
-	ui.lineEditColorBlue->setText("255");
+	ui.lineEditColorRed->setText("192");
+	ui.lineEditColorGreen->setText("192");
+	ui.lineEditColorBlue->setText("192");
+	ui.spinBoxRoofTextureId->setValue(0);
 
 	connect(ui.pushButtonGenerate, SIGNAL(clicked()), this, SLOT(generate()));
 
@@ -31,6 +32,7 @@ void ControlWidget::generate() {
 	building.footprint.push_back(QVector3D(10, 10, 0));
 	building.footprint.push_back(QVector3D(-10, 10, 0));
 	building.numStories = 10;
+	building.roofTextureId = ui.spinBoxRoofTextureId->value();
 
 	VBOGeoBuilding::generateBuilding(mainWin->glWidget->vboRenderManager, building);
 

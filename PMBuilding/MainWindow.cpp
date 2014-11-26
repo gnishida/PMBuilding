@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, 
 	glWidget = new GLWidget3D(this);
 	setCentralWidget(glWidget);
 
+	// load textures
+	VBOGeoBuilding::initBuildingsTex();
+
 	controlWidget->show();
 	addDockWidget(Qt::LeftDockWidgetArea, controlWidget);
 }

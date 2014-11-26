@@ -10,6 +10,7 @@ public:
 	int bldType;
 	int numStories;
 	QColor color;
+	int roofTextureId;
 
 public:
 	Building() : bldType(-1), numStories(-1) {}

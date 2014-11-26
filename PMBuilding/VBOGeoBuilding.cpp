@@ -358,7 +358,7 @@ void VBOGeoBuilding::generateBuilding(VBORenderManager& rendManager, Building& b
 	// 屋根を追加する
 	rendManager.addPrism("3d_building", roofContour, buildingHeight, buildingHeight + boxSize, building.color, false);
 	rendManager.addPolygon("3d_building", roofContour, buildingHeight, building.color, true);
-	rendManager.addPolygon("3d_building", roofContour, buildingHeight + boxSize, roofTex[qrand()%roofTex.size()], QVector3D(1, 1, 1));
+	rendManager.addPolygon("3d_building", roofContour, buildingHeight + boxSize, roofTex[building.roofTextureId], QVector3D(1, 1, 1));
 }
 
 /**
