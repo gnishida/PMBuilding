@@ -1,7 +1,7 @@
 ﻿#include "VBORenderManager.h"
 #include "common.h"
 #include "Polygon3D.h"
-
+#include <QMatrix4x4>
 
 using namespace boost::polygon::operators;
 
@@ -177,10 +177,6 @@ bool VBORenderManager::addStaticGeometry(QString geoName,std::vector<Vertex>& ve
 	return true;
 }//
 
-bool VBORenderManager::checkIfGeoNameInUse(QString geoName){
-	return (geoName2StaticRender.contains(geoName));
-}//
-
 void VBORenderManager::addSphere(const QString& geoName, const QVector3D& center, float radius, const QColor& color) {
 	int slice = 8;
 	int stack = 2;
@@ -286,16 +282,93 @@ void VBORenderManager::addLine(const QString& geoName, const QVector3D& pt1, con
 }
 
 /**
-	* 指定されたポリゴンに基づいて、ジオメトリを生成する。
-	* 凹型のポリゴンにも対応するよう、ポリゴンは台形にtessellateする。
-	*/
-void VBORenderManager::addPolygon(const QString& geoName, std::vector<QVector3D>& polygon, float z, const QColor& color, bool inverseLoop) {
+ * 指定されたポリゴンに基づいて、ジオメトリを生成する。（テクスチャ版）
+ * 凹型のポリゴンにも対応するよう、ポリゴンは台形にtessellateする。
+ */
+void VBORenderManager::addPolygon(const QString& geoName, Loop3D& polygon, float z, const QString& textureName, const QVector3D& texScale) {
+	if (polygon.size() < 3) return;
+
+	VBORenderManager::PolygonSetP polySet;
+	VBORenderManager::polygonP tempPolyP;
+
+	// GEN (to find the OBB of the polygon)
+	QVector3D size;
+	QMatrix4x4 xformMat;
+	Polygon3D::getLoopOBB2(polygon, size, xformMat);
+	Loop3D xformPos;
+	Polygon3D::transformLoop(polygon, xformPos, xformMat);
+
+	float minX=FLT_MAX,minY=FLT_MAX;
+	float maxX=-FLT_MAX,maxY=-FLT_MAX;
+
+	// ポリゴンの頂点情報を、pointP型に変換する
+	std::vector<VBORenderManager::pointP> vP;
+	vP.resize(polygon.size());
+	for (int pN = 0; pN < xformPos.size(); pN++) {
+		vP[pN]=boost::polygon::construct<VBORenderManager::pointP>(polygon[pN].x(), polygon[pN].y());
+		minX=std::min<float>(minX,xformPos[pN].x());
+		minY=std::min<float>(minY,xformPos[pN].y());
+		maxX=std::max<float>(maxX,xformPos[pN].x());
+		maxY=std::max<float>(maxY,xformPos[pN].y());
+	}
+	// GEN
+
+
+
+	// 台形にtessellateする
+	boost::polygon::set_points(tempPolyP,vP.begin(),vP.end());
+	polySet+=tempPolyP;
+	std::vector<VBORenderManager::polygonP> allP;
+	boost::polygon::get_trapezoids(allP,polySet);
+
+	// 各台形について
+	std::vector<Vertex> verts;
+	for (int pN = 0; pN < allP.size(); pN++) {
+		boost::polygon::polygon_with_holes_data<double>::iterator_type itPoly=allP[pN].begin();
+
+		// 各台形について、pointsに頂点座標を格納する
+		Polygon3D points;
+		std::vector<QVector3D> texP;
+		while (itPoly != allP[pN].end()) {
+			VBORenderManager::pointP cP = *itPoly;
+			points.push_back(QVector3D(cP.x(), cP.y(), z));
+
+			QVector3D cP2 = xformMat * QVector3D(cP.x(), cP.y(), 0);
+			texP.push_back(QVector3D((cP2.x() - minX) / size.x(), (cP2.y() - minY) / size.y(), 0.0f));
+			itPoly++;
+		}
+
+		// 三角形の場合は、無理やり四角形にしちゃう
+		while (points.contour.size() < 4) {
+			points.push_back(points.contour.back());
+			texP.push_back(texP.back());
+		}
+
+		// GEN 
+		// Sometimes, the polygon is formed in CW order, so we have to reorient it in CCW order.
+		points.correct();
+
+		QVector3D normal = QVector3D::crossProduct(points[1] - points[0], points[2] - points[0]).normalized();
+		verts.push_back(Vertex(points[0], QColor(), normal, texP[0]));
+		verts.push_back(Vertex(points[1], QColor(), normal, texP[1]));
+		verts.push_back(Vertex(points[2], QColor(), normal, texP[2]));
+		verts.push_back(Vertex(points[3], QColor(), normal, texP[3]));
+	}
+
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
+}
+
+/**
+ * 指定されたポリゴンに基づいて、ジオメトリを生成する。（カラー版）
+ * 凹型のポリゴンにも対応するよう、ポリゴンは台形にtessellateする。
+ */
+void VBORenderManager::addPolygon(const QString& geoName, Loop3D& polygon, float z, const QColor& color, bool inverseLoop) {
 	if (polygon.size() < 3) return;
 
 	PolygonSetP polySet;
 	polygonP tempPolyP;
 
-	// ポリゴンの兆点情報を、pointP型に変換する
+	// ポリゴンの頂点情報を、pointP型に変換する
 	std::vector<pointP> vP;
 	vP.resize(polygon.size());
 	for (int pN = 0; pN < polygon.size(); pN++) {
@@ -320,7 +393,6 @@ void VBORenderManager::addPolygon(const QString& geoName, std::vector<QVector3D>
 
 		// 各台形について、pointsに頂点座標を格納する
 		Polygon3D points;
-		std::vector<QVector3D> texP;
 		while (itPoly != allP[pN].end()) {
 			pointP cP = *itPoly;
 
@@ -355,7 +427,7 @@ void VBORenderManager::addPolygon(const QString& geoName, std::vector<QVector3D>
 	addStaticGeometry(geoName, verts, "", GL_QUADS, 1|mode_Lighting);
 }
 
-void VBORenderManager::addPrism(const QString& geoName, std::vector<QVector3D>& polygon, float baseHeight, float topHeight, const QColor& color, bool addTopAndBase) {
+void VBORenderManager::addPrism(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QColor& color, bool addTopAndBase) {
 	std::vector<Vertex> verts;
 
 	for (int i = 0; i < polygon.size(); i++) {

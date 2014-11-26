@@ -18,116 +18,6 @@ static std::vector<QVector3D> facadeScale;
 static std::vector<QString> windowTex;
 static std::vector<QString> roofTex;
 
-void addTexConvexPoly(VBORenderManager& rendManager,QString geoName,QString textureName,GLenum geometryType,int shaderMode,
-	Loop3D& pos,QColor col,QVector3D norm,float zShift,bool inverseLoop,bool texZeroToOne,QVector3D texScale){
-
-		if(pos.size()<3){
-			return;
-		}
-
-		VBORenderManager::PolygonSetP polySet;
-		VBORenderManager::polygonP tempPolyP;
-
-		// GEN (to find the OBB of the polygon)
-		QVector3D size;
-		QMatrix4x4 xformMat;
-		Polygon3D::getLoopOBB2(pos, size, xformMat);
-		Loop3D xformPos;
-		Polygon3D::transformLoop(pos, xformPos, xformMat);
-
-		float minX=FLT_MAX,minY=FLT_MAX;
-		float maxX=-FLT_MAX,maxY=-FLT_MAX;
-
-		std::vector<VBORenderManager::pointP> vP;
-		vP.resize(pos.size());
-		for(int pN=0;pN<xformPos.size();pN++){
-			vP[pN]=boost::polygon::construct<VBORenderManager::pointP>(pos[pN].x(),pos[pN].y());
-			minX=std::min<float>(minX,xformPos[pN].x());
-			minY=std::min<float>(minY,xformPos[pN].y());
-			maxX=std::max<float>(maxX,xformPos[pN].x());
-			maxY=std::max<float>(maxY,xformPos[pN].y());
-		}
-		// GEN
-
-
-
-
-		boost::polygon::set_points(tempPolyP,vP.begin(),vP.end());
-		polySet+=tempPolyP;
-		std::vector<VBORenderManager::polygonP> allP;
-		boost::polygon::get_trapezoids(allP,polySet);
-		std::vector<Vertex> vert;
-		for(int pN=0;pN<allP.size();pN++){
-			//glColor3ub(qrand()%255,qrand()%255,qrand()%255);
-			boost::polygon::polygon_with_holes_data<double>::iterator_type itPoly=allP[pN].begin();
-			std::vector<QVector3D> points;
-			std::vector<QVector3D> texP;
-			while(itPoly!=allP[pN].end()){
-				VBORenderManager::pointP cP=*itPoly;
-				if(inverseLoop==false)
-					points.push_back(QVector3D(cP.x(),cP.y(),pos[0].z()+zShift));
-				else
-					points.insert(points.begin(),QVector3D(cP.x(),cP.y(),pos[0].z()+zShift));
-
-				if(texZeroToOne==true){
-					QVector3D cP2 = xformMat * QVector3D(cP.x(), cP.y(), 0);
-					texP.push_back(QVector3D((cP2.x() - minX) / size.x(), (cP2.y() - minY) / size.y(), 0.0f));
-				}else{
-					QVector3D cP2 = xformMat * QVector3D(cP.x(), cP.y(), 0);
-					texP.push_back(QVector3D((cP2.x() - minX) * texScale.x(), (cP2.y() - minY) * texScale.y(), 0.0f));
-				}
-				itPoly++;
-			}
-			if(points.size()>=3){//last vertex repited
-				for(int i=0;i<3;i++)
-					vert.push_back(Vertex(points[i],col,norm,texP[i]));
-				if(points.size()==3){
-					if(geometryType==GL_QUADS)
-						vert.push_back(Vertex(points[2],col,norm,texP[2]));//repeat last
-				}else{
-					if(geometryType==GL_QUADS)
-						vert.push_back(Vertex(points[3],col,norm,texP[3]));//fourth
-					else{
-						for(int i=0;i<2;i++)//note just first 2
-							vert.push_back(Vertex(points[i],col,norm,texP[i]));
-						vert.push_back(Vertex(points[3],col,norm,texP[3]));//fourth
-					}
-				}
-			}
-		}
-
-		rendManager.addStaticGeometry(geoName,vert,textureName,geometryType,shaderMode);
-}//
-
-
-void addFirstFloor(VBORenderManager& rendManager,std::vector<QVector3D>& footprint,QColor floorColor,float initHeight,float floorHeight){
-
-	for(int sN=0;sN<footprint.size();sN++){
-		int ind1=sN;
-		int ind2=(sN+1)%footprint.size();
-		std::vector<Vertex> sideVert;
-		int nextN;
-		QVector3D normal;
-		for(int curN=0;curN<footprint.size();curN++){
-			nextN=(curN+1)%footprint.size();
-			normal=QVector3D::crossProduct(footprint[nextN]-footprint[curN],QVector3D(0,0,1)).normalized();
-			sideVert.push_back(Vertex(QVector3D(footprint[curN].x(),footprint[curN].y(),footprint[curN].z()+initHeight),floorColor,normal,QVector3D()));
-			sideVert.push_back(Vertex(QVector3D(footprint[nextN].x(),footprint[nextN].y(),footprint[curN].z()+initHeight),floorColor,normal,QVector3D()));
-			sideVert.push_back(Vertex(QVector3D(footprint[nextN].x(),footprint[nextN].y(),footprint[curN].z()+initHeight+floorHeight),floorColor,normal,QVector3D()));
-			sideVert.push_back(Vertex(QVector3D(footprint[curN].x(),footprint[curN].y(),footprint[curN].z()+initHeight+floorHeight),floorColor,normal,QVector3D()));			
-		}
-		rendManager.addStaticGeometry("3d_building",sideVert,"",GL_QUADS,1|mode_Lighting);//|LC::mode_Lighting);
-	}
-}//
-
-void addRoof(VBORenderManager& rendManager, Loop3D& roofOffCont,QColor boxColor,float initHeight,float boxSize){
-	addTexConvexPoly(rendManager,"3d_building",roofTex[qrand()%roofTex.size()],GL_QUADS,2|mode_Lighting,//|LC::mode_AdaptTerrain|LC::mode_Lighting, "../data/textures/LC/roof/roof0.jpg"
-		roofOffCont,boxColor,QVector3D(0,0,1.0f),initHeight+boxSize,false,true,QVector3D(1,1,1));
-	addTexConvexPoly(rendManager,"3d_building","",GL_QUADS,1|mode_Lighting,//|LC::mode_AdaptTerrain|LC::mode_Lighting,
-		roofOffCont,boxColor,QVector3D(0,0,-1.0f),initHeight,true,true,QVector3D(1,1,1));
-	addFirstFloor(rendManager,roofOffCont,boxColor,initHeight,boxSize);
-}//
-
 void calculateColumnContour(std::vector<QVector3D>& currentContour,std::vector<QVector3D>& columnContour){
 	QVector3D pos1,pos2;
 	for(int sN=0;sN<currentContour.size();sN++){
@@ -438,33 +328,24 @@ void VBOGeoBuilding::generateBuilding(VBORenderManager& rendManager, Building& b
 		return;
 	}
 
-	Polygon3D footprint = building.footprint;
-	int numStories = building.numStories;
+	// テクスチャ読み込み
+	if (!bldgInitialized) initBuildingsTex();
 
-	///////////////////////////
-	// MORE COMPLEX
-	if(bldgInitialized==false){
-		initBuildingsTex();
-	}
-	float boxSize=1.0f;
-	float firstFloorHeigh=4.8f;
-	float buildingHeight=(numStories-1)*storyHeight+firstFloorHeigh+boxSize;//just one box size (1st-2nd)
-
-	Loop3D roofOffCont;
+	float boxSize = 1.0f;
+	float firstFloorHeight = 4.8f;
+	float buildingHeight = (building.numStories - 1) * storyHeight + firstFloorHeight + boxSize;//just one box size (1st-2nd)
 
 	// roofOffContを作成 (footprintを少し大きくする)
-	footprint.computeInset(-boxSize, roofOffCont, false); 
+	Loop3D roofContour;
+	building.footprint.computeInset(-boxSize, roofContour, false); 
 
-	QColor bldgColor = building.color;
-
-	// First floor
-	rendManager.addPrism("3d_building", building.footprint.contour, 0, firstFloorHeigh, building.color, false);
-	rendManager.addPrism("3d_building", roofOffCont, firstFloorHeigh, firstFloorHeigh + boxSize, building.color, true);
-	firstFloorHeigh += boxSize;
+	// １階部分を構築
+	rendManager.addPrism("3d_building", building.footprint.contour, 0, firstFloorHeight, building.color, false);
+	rendManager.addPrism("3d_building", roofContour, firstFloorHeight, firstFloorHeight + boxSize, building.color, true);
 
 	// ファサードのcontourを計算する
 	std::vector<QVector3D> columnContour;
-	calculateColumnContour(footprint.contour, columnContour);
+	calculateColumnContour(building.footprint.contour, columnContour);
 
 	// ファサードを追加する
 	int randomFacade=qrand()%facadeTex.size();
@@ -472,10 +353,12 @@ void VBOGeoBuilding::generateBuilding(VBORenderManager& rendManager, Building& b
 	float vS=facadeScale[randomFacade].y();
 	QVector3D windowRandSize((float)qrand()/RAND_MAX,(float)qrand()/RAND_MAX,(float)qrand()/RAND_MAX);
 	QVector3D randN(qrand(),qrand(),qrand());
-	addColumnGeometry(rendManager,columnContour,randomFacade,randN,uS,vS,firstFloorHeigh,numStories-1,false,windowRandSize);
+	addColumnGeometry(rendManager,columnContour,randomFacade,randN,uS,vS, firstFloorHeight + boxSize, building.numStories-1, false, windowRandSize);
 
 	// 屋根を追加する
-	addRoof(rendManager,roofOffCont,bldgColor,buildingHeight,boxSize);
+	rendManager.addPrism("3d_building", roofContour, buildingHeight, buildingHeight + boxSize, building.color, false);
+	rendManager.addPolygon("3d_building", roofContour, buildingHeight, building.color, true);
+	rendManager.addPolygon("3d_building", roofContour, buildingHeight + boxSize, roofTex[qrand()%roofTex.size()], QVector3D(1, 1, 1));
 }
 
 /**
