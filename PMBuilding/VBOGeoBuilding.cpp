@@ -479,8 +479,10 @@ void VBOGeoBuilding::generateBuilding(VBORenderManager& rendManager, Building& b
 
 	////////////////////////////
 	// FLOORS
-	float randC=(0.8*qrand())/RAND_MAX;
-	QColor bldgColor(randC,randC,randC);
+	//float randC=(0.8*qrand())/RAND_MAX;
+	//QColor bldgColor(randC,randC,randC);
+	QColor bldgColor = building.color;
+
 	///////////////////////////
 	// First floor
 	addFirstFloor(rendManager,footprint.contour,bldgColor,0,firstFloorHeigh);
