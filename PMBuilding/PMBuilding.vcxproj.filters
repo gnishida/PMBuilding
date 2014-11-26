@@ -67,9 +67,6 @@
     <ClCompile Include="VBOGeoBuilding.cpp">
       <Filter>VBO</Filter>
     </ClCompile>
-    <ClCompile Include="VBOPm.cpp">
-      <Filter>VBO</Filter>
-    </ClCompile>
     <ClCompile Include="VBORenderManager.cpp">
       <Filter>VBO</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
       <Filter>VBO</Filter>
     </ClInclude>
     <ClInclude Include="VBOGeoBuilding.h">
-      <Filter>VBO</Filter>
-    </ClInclude>
-    <ClInclude Include="VBOPm.h">
       <Filter>VBO</Filter>
     </ClInclude>
     <ClInclude Include="VBORenderManager.h">

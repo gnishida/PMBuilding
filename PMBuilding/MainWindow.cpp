@@ -1,9 +1,7 @@
 #include "MainWindow.h"
-#include "VBOPm.h"
+#include "VBOGeoBuilding.h"
 
-MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
-	: QMainWindow(parent, flags)
-{
+MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags) {
 	ui.setupUi(this);
 
 	// register the menu's action handlers
@@ -15,12 +13,20 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 	setCentralWidget(glWidget);
 }
 
-MainWindow::~MainWindow()
-{
-}
-
 void MainWindow::onGenerateBuilding() {
-	VBOPm::generateBuildings(glWidget->vboRenderManager);
+	glWidget->vboRenderManager.removeStaticGeometry("3d_building");
+	glWidget->vboRenderManager.removeStaticGeometry("3d_building_fac");
+			
+	Building building;
+	building.bldType = 1;
+	building.buildingFootprint.push_back(QVector3D(-10, -10, 0));
+	building.buildingFootprint.push_back(QVector3D(10, -10, 0));
+	building.buildingFootprint.push_back(QVector3D(10, 10, 0));
+	building.buildingFootprint.push_back(QVector3D(-10, 10, 0));
+	building.numStories = 10;
+
+	VBOGeoBuilding::generateBuilding(glWidget->vboRenderManager, building);
+
 	glWidget->shadow.makeShadowMap(glWidget);
 	glWidget->updateGL();
 }

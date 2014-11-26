@@ -276,49 +276,7 @@ void addWindow(VBORenderManager& rendManager,
 			addTexQuad(texN,vert[1],vert[4],vert[7],vert[2],tex,QVector3D(0.0f,0.0f,0.5f),QVector3D(),true);*/
 			return;
 		}
-
-		/*if(frameBoder==true&&type!=3){//frame (not for ralings)
-		float frBotDepth=0.5f;
-		float frBotHeig=0.25f;
-		//bot
-		addHalfBox(-1,QVector3D(0.5,0.5,0.5),initPoint,dirR,dirUp,width,frBotHeig,frBotDepth,true,true);
-		//top
-		addHalfBox(-1,QVector3D(0.5,0.5,0.5),initPoint+dirUp*(height-frBotHeig/2.0f),dirR,dirUp,width,frBotHeig/2.0f,frBotDepth/2,true,true);
-		// left
-		addHalfBox(-1,QVector3D(0.5,0.5 ,0.5),initPoint+dirUp*(frBotHeig),dirR,dirUp,frBotHeig,height-1.5f*frBotHeig,frBotDepth/2,true,false);
-		// right
-		addHalfBox(-1,QVector3D(0.5,0.5,0.5),initPoint+dirUp*(frBotHeig)+dirR*(width-frBotDepth/2),dirR,dirUp,frBotHeig,height-1.5f*frBotHeig,frBotDepth/2,true,false);
-
-
-		initPoint+=dirUp*(frBotHeig)+dirR*frBotHeig;
-		width-=2*frBotHeig;
-		height-=(1.5f*frBotHeig);
-		}
-
-		// BACK
-		std::vector<QVector3D> tex;
-		// BACK
-		tex.push_back(QVector3D(0,0,0));tex.push_back(QVector3D(1.0f,0,0));tex.push_back(QVector3D(1.0f,1.0f,0));tex.push_back(QVector3D(0,1.0f,0));
-		int texN=window_insideTex[((int)randN.x())%window_insideTex.size()];
-		addTexQuad(texN,initPoint,initPoint+dirR*width,initPoint+dirR*width+dirUp*height,initPoint+dirUp*height,tex,QVector3D(0.0f,0.0f,0.5f),QVector3D(),true);
-		tex.clear();
-
-
-
-		if(type==2){// square frame
-		float frameWidth=0.12f;
-
-		//bot
-		addHalfBox(-1,color,initPoint,dirR,dirUp,width,frameWidth,frameWidth,true,true);
-		//top
-		addHalfBox(-1,color,initPoint+dirUp*(height-frameWidth),dirR,dirUp,width,frameWidth,frameWidth,true,true);
-		// left
-		addHalfBox(-1,color,initPoint+dirUp*(frameWidth),dirR,dirUp,frameWidth,height-2.0f*frameWidth,frameWidth,true,false);
-		// right
-		addHalfBox(-1,color,initPoint+dirUp*(frameWidth)+dirR*(width-frameWidth),dirR,dirUp,frameWidth,height-2.0f*frameWidth,frameWidth,true,false);
-		}*/
-
-}//
+}
 
 void addColumnGeometry(VBORenderManager& rendManager,
 	std::vector<QVector3D>& columnContour,int randomFacade,QVector3D randN,float uS,float vS,float height,int numFloors,bool buildingWithWindows,QVector3D windowRandomSize){

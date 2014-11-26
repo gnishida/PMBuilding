@@ -5,13 +5,12 @@
 #include "ui_MainWindow.h"
 #include "GLWidget3D.h"
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
 	Q_OBJECT
 
 public:
 	MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
-	~MainWindow();
+	~MainWindow() {}
 
 public slots:
 	void onGenerateBuilding();
