@@ -91,9 +91,12 @@ public:
 	bool checkIfGeoNameInUse(QString geoName);
 
 	// some convenient functions for drawing basic primitives
-	void addSphere(QString geoName, const QVector3D& center, float radius, const QColor& color);
-	void addBox(QString geoName, const QVector3D& center, const QVector3D& size, const QColor& color);
-	void addLine(QString geoName, const QVector3D& pt1, const QVector3D& pt2, const QColor& color);
+	void addSphere(const QString& geoName, const QVector3D& center, float radius, const QColor& color);
+	void addBox(const QString& geoName, const QVector3D& center, const QVector3D& size, const QColor& color);
+	void addLine(const QString& geoName, const QVector3D& pt1, const QVector3D& pt2, const QColor& color);
+	void addPolygon(const QString& geoName, std::vector<QVector3D>& polygon, float z, const QString& textureName, const QVector3D& texScale);
+	void addPolygon(const QString& geoName, std::vector<QVector3D>& polygon, float z, const QColor& color, bool inverseLoop);
+	void addPrism(const QString& geoName, std::vector<QVector3D>& polygon, float baseHeight, float topHeight, const QColor& color, bool addTopAndBase = true);
 
 private:
 

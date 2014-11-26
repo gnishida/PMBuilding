@@ -2,6 +2,9 @@
 #include "common.h"
 #include "Polygon3D.h"
 
+
+using namespace boost::polygon::operators;
+
 VBORenderManager::VBORenderManager(){
 	side=4000.0f;//10000.0f;
 	minPos=QVector3D (-side/2.0f,-side/2.0f,0);
@@ -178,7 +181,7 @@ bool VBORenderManager::checkIfGeoNameInUse(QString geoName){
 	return (geoName2StaticRender.contains(geoName));
 }//
 
-void VBORenderManager::addSphere(QString geoName, const QVector3D& center, float radius, const QColor& color) {
+void VBORenderManager::addSphere(const QString& geoName, const QVector3D& center, float radius, const QColor& color) {
 	int slice = 8;
 	int stack = 2;
 
@@ -218,7 +221,7 @@ void VBORenderManager::addSphere(QString geoName, const QVector3D& center, float
 	addStaticGeometry(geoName, vert, "", GL_QUADS, 1|mode_Lighting);
 }
 
-void VBORenderManager::addBox(QString geoName, const QVector3D& center, const QVector3D& size, const QColor& color) {
+void VBORenderManager::addBox(const QString& geoName, const QVector3D& center, const QVector3D& size, const QColor& color) {
 	std::vector<Vertex> vert;
 
 	QVector3D pt(center - size * 0.5);
@@ -273,7 +276,7 @@ void VBORenderManager::addBox(QString geoName, const QVector3D& center, const QV
 	addStaticGeometry(geoName, vert, "", GL_QUADS, 1|mode_Lighting);
 }
 
-void VBORenderManager::addLine(QString geoName, const QVector3D& pt1, const QVector3D& pt2, const QColor& color) {
+void VBORenderManager::addLine(const QString& geoName, const QVector3D& pt1, const QVector3D& pt2, const QColor& color) {
 	std::vector<Vertex> vert;
 
 	vert.push_back(Vertex(pt1.x(), pt1.y(), pt1.z(), color.redF(), color.greenF(), color.blueF(), color.alphaF(), 0, 0, 1, 0, 0, 0));
@@ -282,7 +285,95 @@ void VBORenderManager::addLine(QString geoName, const QVector3D& pt1, const QVec
 	addStaticGeometry(geoName, vert, "", GL_LINES, 1);
 }
 
-using namespace boost::polygon::operators;
+/**
+	* 指定されたポリゴンに基づいて、ジオメトリを生成する。
+	* 凹型のポリゴンにも対応するよう、ポリゴンは台形にtessellateする。
+	*/
+void VBORenderManager::addPolygon(const QString& geoName, std::vector<QVector3D>& polygon, float z, const QColor& color, bool inverseLoop) {
+	if (polygon.size() < 3) return;
+
+	PolygonSetP polySet;
+	polygonP tempPolyP;
+
+	// ポリゴンの兆点情報を、pointP型に変換する
+	std::vector<pointP> vP;
+	vP.resize(polygon.size());
+	for (int pN = 0; pN < polygon.size(); pN++) {
+		vP[pN]=boost::polygon::construct<pointP>(polygon[pN].x(), polygon[pN].y());
+	}
+
+	// ポリゴンをclosedにする
+	if (polygon.back().x() != polygon.front().x() && polygon.back().y() != polygon.front().y()) {
+		vP.push_back(vP[0]);
+	}
+
+	// 台形にtessellateする
+	boost::polygon::set_points(tempPolyP, vP.begin(), vP.end());
+	polySet += tempPolyP;
+	std::vector<polygonP> allP;
+	boost::polygon::get_trapezoids(allP,polySet);
+		
+	// 各台形について
+	std::vector<Vertex> verts;
+	for (int pN = 0; pN < allP.size(); pN++) {
+		boost::polygon::polygon_with_holes_data<double>::iterator_type itPoly = allP[pN].begin();
+
+		// 各台形について、pointsに頂点座標を格納する
+		Polygon3D points;
+		std::vector<QVector3D> texP;
+		while (itPoly != allP[pN].end()) {
+			pointP cP = *itPoly;
+
+			points.push_back(QVector3D(cP.x(), cP.y(), z));
+
+			itPoly++;
+		}
+		if (points.contour.size() == 0) continue;
+
+		// 三角形の場合は、無理やり四角形にしちゃう
+		while (points.contour.size() < 4)
+			points.push_back(points.contour.back());
+
+		// GEN 
+		// Sometimes, the polygon is formed in CW order, so we have to reorient it in CCW order.
+		points.correct();
+		
+		QVector3D normal = QVector3D::crossProduct(points[1] - points[0], points[2] - points[0]).normalized();
+		if (inverseLoop) {
+			verts.push_back(Vertex(points[0], color, -normal, QVector3D()));
+			verts.push_back(Vertex(points[3], color, -normal, QVector3D()));
+			verts.push_back(Vertex(points[2], color, -normal, QVector3D()));
+			verts.push_back(Vertex(points[1], color, -normal, QVector3D()));
+		} else {
+			verts.push_back(Vertex(points[0], color, normal, QVector3D()));
+			verts.push_back(Vertex(points[1], color, normal, QVector3D()));
+			verts.push_back(Vertex(points[2], color, normal, QVector3D()));
+			verts.push_back(Vertex(points[3], color, normal, QVector3D()));
+		}
+	}
+
+	addStaticGeometry(geoName, verts, "", GL_QUADS, 1|mode_Lighting);
+}
+
+void VBORenderManager::addPrism(const QString& geoName, std::vector<QVector3D>& polygon, float baseHeight, float topHeight, const QColor& color, bool addTopAndBase) {
+	std::vector<Vertex> verts;
+
+	for (int i = 0; i < polygon.size(); i++) {
+		int next = (i + 1) % polygon.size();
+
+		QVector3D normal = QVector3D::crossProduct(polygon[next] - polygon[i], QVector3D(0,0,1)).normalized();
+		verts.push_back(Vertex(QVector3D(polygon[i].x(), polygon[i].y(), baseHeight), color, normal, QVector3D()));
+		verts.push_back(Vertex(QVector3D(polygon[next].x(), polygon[next].y(), baseHeight), color, normal, QVector3D()));
+		verts.push_back(Vertex(QVector3D(polygon[next].x(), polygon[next].y(), topHeight), color, normal, QVector3D()));
+		verts.push_back(Vertex(QVector3D(polygon[i].x(), polygon[i].y(), topHeight), color, normal, QVector3D()));			
+	}
+	addStaticGeometry(geoName, verts, "", GL_QUADS, 1|mode_Lighting);
+
+	if (addTopAndBase) {
+		addPolygon(geoName, polygon, baseHeight, color, true);
+		addPolygon(geoName, polygon, topHeight, color, false);
+	}
+}
 
 /**
 	* 指定されたポリゴンに基づいて、ジオメトリを生成する。

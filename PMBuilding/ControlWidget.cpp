@@ -26,10 +26,10 @@ void ControlWidget::generate() {
 	Building building;
 	building.bldType = 1;
 	building.color = QColor(ui.lineEditColorRed->text().toInt(), ui.lineEditColorGreen->text().toInt(), ui.lineEditColorBlue->text().toInt());
-	building.buildingFootprint.push_back(QVector3D(-10, -10, 0));
-	building.buildingFootprint.push_back(QVector3D(10, -10, 0));
-	building.buildingFootprint.push_back(QVector3D(10, 10, 0));
-	building.buildingFootprint.push_back(QVector3D(-10, 10, 0));
+	building.footprint.push_back(QVector3D(-10, -10, 0));
+	building.footprint.push_back(QVector3D(10, -10, 0));
+	building.footprint.push_back(QVector3D(10, 10, 0));
+	building.footprint.push_back(QVector3D(-10, 10, 0));
 	building.numStories = 10;
 
 	VBOGeoBuilding::generateBuilding(mainWin->glWidget->vboRenderManager, building);

@@ -6,7 +6,7 @@
 
 class Building {
 public:
-	Polygon3D buildingFootprint;
+	Polygon3D footprint;
 	int bldType;
 	int numStories;
 	QColor color;
