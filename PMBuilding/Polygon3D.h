@@ -41,9 +41,6 @@ bool isPointWithinLoop(std::vector<QVector3D> &loop, QVector3D &pt);
 **/
 class Polygon3D {
 public:
-	/**
-	* Vector containing 3D points of polygon contour
-	**/
 	Loop3D contour;
 
 private:			
@@ -51,9 +48,6 @@ private:
 	QVector3D centroid;
 
 public:
-	/**
-	* Constructor.
-	**/
 	Polygon3D()
 	{
 		normalVec = QVector3D(0.0f, 0.0f, 0.0f);
@@ -102,7 +96,6 @@ public:
 		}
 	}
 
-
 	inline void getBBox3D(QVector3D &ptMin, QVector3D &ptMax)
 	{
 		ptMin.setX(FLT_MAX);
@@ -136,11 +129,7 @@ public:
 		}
 	}
 
-	//Is self intersecting
 	bool isSelfIntersecting(void);
-
-	//BBox envelope();
-	//float area();
 
 	//Only works for polygons with no holes in them
 	bool splitMeWithPolyline(std::vector<QVector3D> &pline, Loop3D &pgon1, Loop3D &pgon2);
@@ -160,43 +149,21 @@ public:
 		}
 		return c;
 
-	}//
-
-
+	}
 
 	static QVector3D getLoopNormalVector(const Loop3D &pin);
-
 	static bool reorientFace(Loop3D &pface, bool onlyCheck = false);
-
 	static int cleanLoop(Loop3D &pin, Loop3D &pout, float threshold);
-
 	static void transformLoop(Loop3D &pin, Loop3D &pout, QMatrix4x4 &transformMat);
-
-	//static float computeLoopArea(Loop3D &pin, bool parallelToXY = false);
-
 	static void sampleTriangularLoopInterior(Loop3D &pin, std::vector<QVector3D> &pts, float density);
-
 	static QVector3D getLoopAABB(Loop3D &pin, QVector3D &minCorner, QVector3D &maxCorner);
-
 	static void getLoopOBB(Loop3D &pin, QVector3D &size, QMatrix4x4 &xformMat);
 	static void getLoopOBB2(Loop3D &pin, QVector3D &size, QMatrix4x4 &xformMat);
-
 	void getMyOBB(QVector3D &size, QMatrix4x4 &xformMat);
-
-	static bool segmentSegmentIntersectXY(QVector2D &a, QVector2D &b, QVector2D &c, QVector2D &d,
-		float *tab, float *tcd, bool segmentOnly, QVector2D &intPoint);
-
-	static void extrudePolygon(Polygon3D &basePgon, float height,
-		std::vector<Polygon3D> &pgonExtrusion);
-
-	//Shortest distance from a point to a polygon
+	static bool segmentSegmentIntersectXY(QVector2D &a, QVector2D &b, QVector2D &c, QVector2D &d, float *tab, float *tcd, bool segmentOnly, QVector2D &intPoint);
+	static void extrudePolygon(Polygon3D &basePgon, float height, std::vector<Polygon3D> &pgonExtrusion);
 	static float distanceXYToPoint(Loop3D &pin, QVector3D &pt);
-
-	//minimum distance from a loop to another loop (this considers the contour only)
 	static float distanceXYfromContourAVerticesToContourB(Loop3D &pA, Loop3D &pB);
-
-
-
 };	
 
 class BBox3D{

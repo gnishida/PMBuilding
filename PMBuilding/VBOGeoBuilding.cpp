@@ -367,7 +367,6 @@ void VBOGeoBuilding::generateBuilding(VBORenderManager& rendManager, Building& b
 void VBOGeoBuilding::generateHouse(VBORenderManager& rendManager,Building& building) {
 	Polygon3D& footprint=building.footprint;
 	int numStories=building.numStories;
-	//printf("numSt %d numSides %d\n",numStories,footprint.contour.size());
 
 	///////////////////////////
 	// SIDES
