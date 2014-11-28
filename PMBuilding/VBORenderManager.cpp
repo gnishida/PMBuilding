@@ -177,6 +177,45 @@ bool VBORenderManager::addStaticGeometry(QString geoName,std::vector<Vertex>& ve
 	return true;
 }//
 
+void VBORenderManager::addTriangle(const QString& geoName, Loop3D& polygon, Loop3D& texCoord, const QString& textureName) {
+	QVector3D normal = QVector3D::crossProduct(polygon[1] - polygon[0], polygon[2] - polygon[0]).normalized();
+
+	std::vector<Vertex> verts;
+	verts.push_back(Vertex(polygon[0], QColor(), normal, texCoord[0]));
+	verts.push_back(Vertex(polygon[1], QColor(), normal, texCoord[1]));
+	verts.push_back(Vertex(polygon[2], QColor(), normal, texCoord[2]));
+	verts.push_back(Vertex(polygon[2], QColor(), normal, texCoord[2]));
+
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
+}
+
+void VBORenderManager::addTriangle(const QString& geoName, Loop3D& baseLine, float baseHeight, float topHeight, const QString& textureName) {
+	QVector3D normal = QVector3D::crossProduct(baseLine[1] - baseLine[0], QVector3D(0, 0, 1)).normalized();
+	float length = (baseLine[1] - baseLine[0]).length();
+
+	std::vector<Vertex> verts;
+	verts.push_back(Vertex(QVector3D(baseLine[0].x(), baseLine[0].y(), baseHeight), QColor(), normal, QVector3D(0, baseHeight, 0)));
+	verts.push_back(Vertex(QVector3D(baseLine[1].x(), baseLine[1].y(), baseHeight), QColor(), normal, QVector3D(length, baseHeight, 0)));
+	verts.push_back(Vertex(QVector3D((baseLine[0].x() + baseLine[1].x()) * 0.5, (baseLine[0].y() + baseLine[1].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
+	verts.push_back(Vertex(QVector3D((baseLine[0].x() + baseLine[1].x()) * 0.5, (baseLine[0].y() + baseLine[1].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
+
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
+}
+
+void VBORenderManager::addQuad(const QString& geoName, Loop3D& polygon, const QString& textureName) {
+	QVector3D normal = QVector3D::crossProduct(polygon[1] - polygon[0], polygon[2] - polygon[0]).normalized();
+	float width = (polygon[1] - polygon[0]).length();
+	float height = (polygon[2] - polygon[1]).length();
+
+	std::vector<Vertex> verts;
+	verts.push_back(Vertex(polygon[0], QColor(), normal, QVector3D(0, 0, 0)));
+	verts.push_back(Vertex(polygon[1], QColor(), normal, QVector3D(width, 0, 0)));
+	verts.push_back(Vertex(polygon[2], QColor(), normal, QVector3D(width, height, 0)));
+	verts.push_back(Vertex(polygon[3], QColor(), normal, QVector3D(0, height, 0)));
+
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
+}
+
 void VBORenderManager::addSphere(const QString& geoName, const QVector3D& center, float radius, const QColor& color) {
 	int slice = 8;
 	int stack = 2;
@@ -427,6 +466,25 @@ void VBORenderManager::addPolygon(const QString& geoName, Loop3D& polygon, float
 	addStaticGeometry(geoName, verts, "", GL_QUADS, 1|mode_Lighting);
 }
 
+void VBORenderManager::addPrism(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QString& textureName) {
+	std::vector<Vertex> verts;
+
+	float accuLength = 0.0f;
+	for (int i = 0; i < polygon.size(); i++) {
+		int next = (i + 1) % polygon.size();
+		float length = (polygon[next] - polygon[i]).length();
+
+		QVector3D normal = QVector3D::crossProduct(polygon[next] - polygon[i], QVector3D(0,0,1)).normalized();
+		verts.push_back(Vertex(QVector3D(polygon[i].x(), polygon[i].y(), baseHeight), QColor(), normal, QVector3D(accuLength, baseHeight, 0)));
+		verts.push_back(Vertex(QVector3D(polygon[next].x(), polygon[next].y(), baseHeight), QColor(), normal, QVector3D(accuLength + length, baseHeight, 0)));
+		verts.push_back(Vertex(QVector3D(polygon[next].x(), polygon[next].y(), topHeight), QColor(), normal, QVector3D(accuLength + length, topHeight, 0)));
+		verts.push_back(Vertex(QVector3D(polygon[i].x(), polygon[i].y(), topHeight), QColor(), normal, QVector3D(accuLength, topHeight, 0)));
+
+		accuLength += length;
+	}
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
+}
+
 void VBORenderManager::addPrism(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QColor& color, bool addTopAndBase) {
 	std::vector<Vertex> verts;
 
@@ -445,6 +503,30 @@ void VBORenderManager::addPrism(const QString& geoName, Loop3D& polygon, float b
 		addPolygon(geoName, polygon, baseHeight, color, true);
 		addPolygon(geoName, polygon, topHeight, color, false);
 	}
+}
+
+void VBORenderManager::addWedge(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QString& textureName) {
+	std::vector<Vertex> verts;
+
+	{ // 手前の三角形
+		QVector3D normal = (polygon[1] - polygon[2]).normalized();
+		float length = (polygon[1] - polygon[0]).length();
+		verts.push_back(Vertex(QVector3D(polygon[0].x(), polygon[0].y(), baseHeight), QColor(), normal, QVector3D(0, baseHeight, 0)));
+		verts.push_back(Vertex(QVector3D(polygon[1].x(), polygon[1].y(), baseHeight), QColor(), normal, QVector3D(length, baseHeight, 0)));
+		verts.push_back(Vertex(QVector3D((polygon[0].x() + polygon[1].x()) * 0.5, (polygon[0].y() + polygon[1].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
+		verts.push_back(Vertex(QVector3D((polygon[0].x() + polygon[1].x()) * 0.5, (polygon[0].y() + polygon[1].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
+	}
+
+	{ // 奥の三角形
+		QVector3D normal = (polygon[2] - polygon[1]).normalized();
+		float length = (polygon[3] - polygon[2]).length();
+		verts.push_back(Vertex(QVector3D(polygon[2].x(), polygon[2].y(), baseHeight), QColor(), normal, QVector3D(0, baseHeight, 0)));
+		verts.push_back(Vertex(QVector3D(polygon[3].x(), polygon[3].y(), baseHeight), QColor(), normal, QVector3D(length, baseHeight, 0)));
+		verts.push_back(Vertex(QVector3D((polygon[2].x() + polygon[3].x()) * 0.5, (polygon[2].y() + polygon[3].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
+		verts.push_back(Vertex(QVector3D((polygon[2].x() + polygon[3].x()) * 0.5, (polygon[2].y() + polygon[3].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
+	}
+
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
 }
 
 /**

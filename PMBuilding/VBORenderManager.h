@@ -90,12 +90,17 @@ public:
 	void renderStaticGeometry(QString geoName);
 
 	// some convenient functions for drawing basic primitives
+	void addTriangle(const QString& geoName, Loop3D& polygon, Loop3D& texCoord, const QString& textureName);
+	void addTriangle(const QString& geoName, Loop3D& baseLine, float baseHeight, float topHeight, const QString& textureName);
+	void addQuad(const QString& geoName, Loop3D& polygon, const QString& textureName);
 	void addSphere(const QString& geoName, const QVector3D& center, float radius, const QColor& color);
 	void addBox(const QString& geoName, const QVector3D& center, const QVector3D& size, const QColor& color);
 	void addLine(const QString& geoName, const QVector3D& pt1, const QVector3D& pt2, const QColor& color);
 	void addPolygon(const QString& geoName, Loop3D& polygon, float z, const QString& textureName, const QVector3D& texScale);
 	void addPolygon(const QString& geoName, Loop3D& polygon, float z, const QColor& color, bool inverseLoop = false);
+	void addPrism(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QString& textureName);
 	void addPrism(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QColor& color, bool addTopAndBase = true);
+	void addWedge(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QString& textureName);
 
 private:
 

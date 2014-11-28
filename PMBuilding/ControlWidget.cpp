@@ -29,10 +29,14 @@ void ControlWidget::generate() {
 	Building building;
 	building.bldType = ui.spinBoxType->value();
 	building.color = QColor(ui.lineEditColorRed->text().toInt(), ui.lineEditColorGreen->text().toInt(), ui.lineEditColorBlue->text().toInt());
-	building.footprint.push_back(QVector3D(-10, -10, 0));
+	/*building.footprint.push_back(QVector3D(-10, -10, 0));
 	building.footprint.push_back(QVector3D(10, -10, 0));
 	building.footprint.push_back(QVector3D(10, 10, 0));
-	building.footprint.push_back(QVector3D(-10, 10, 0));
+	building.footprint.push_back(QVector3D(-10, 10, 0));*/
+	building.footprint.push_back(QVector3D(-5, -8, 0));
+	building.footprint.push_back(QVector3D(5, -8, 0));
+	building.footprint.push_back(QVector3D(5, 8, 0));
+	building.footprint.push_back(QVector3D(-5, 8, 0));
 	building.roofTextureId = ui.spinBoxRoofTextureId->value();
 	building.numStories = ui.spinBoxNumStories->value();
 
