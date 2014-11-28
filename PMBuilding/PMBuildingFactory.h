@@ -5,7 +5,7 @@
 #include "VBORenderManager.h"
 #include "Building.h"
 
-class PMBuildingHouse {
+class PMBuildingFactory {
 public:
 	static std::vector<QString> textures;
 	static bool initialized;

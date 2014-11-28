@@ -3,9 +3,7 @@
 *		@author igarciad
 ************************************************************************************************/
 
-#include "VBORenderManager.h"
 #include "PMBuildingTower.h"
-#include <QMatrix4x4>
 #include "qdir.h"
 
 const float storyHeight=4.2f;
@@ -17,7 +15,7 @@ std::vector<QVector3D> PMBuildingTower::facadeScale;
 std::vector<QString> PMBuildingTower::windowTex;
 std::vector<QString> PMBuildingTower::roofTex;
 
-void PMBuildingTower::initTex() {
+void PMBuildingTower::initialize() {
 	if (initialized) return;
 
 	QString pathName="../data/textures/LC/";
@@ -208,8 +206,7 @@ void PMBuildingTower::addColumnGeometry(VBORenderManager& rendManager, std::vect
 }
 
 void PMBuildingTower::generate(VBORenderManager& rendManager, Building& building) {
-	// テクスチャ読み込み
-	initTex();
+	initialize();
 
 	float boxSize = 1.0f;
 	float firstFloorHeight = 4.8f;

@@ -88,6 +88,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_ControlWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="PMBuildingFactory.cpp">
+      <Filter>VBO</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.ui">
@@ -150,6 +153,9 @@
       <Filter>VBO</Filter>
     </ClInclude>
     <ClInclude Include="Building.h">
+      <Filter>VBO</Filter>
+    </ClInclude>
+    <ClInclude Include="PMBuildingFactory.h">
       <Filter>VBO</Filter>
     </ClInclude>
   </ItemGroup>

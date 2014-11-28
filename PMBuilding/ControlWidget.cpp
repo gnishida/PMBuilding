@@ -4,6 +4,7 @@
 #include "GLWidget3D.h"
 #include "PMBuildingTower.h"
 #include "PMBuildingHouse.h"
+#include "PMBuildingFactory.h"
 
 ControlWidget::ControlWidget(MainWindow* mainWin) : QDockWidget("Control Widget", (QWidget*)mainWin) {
 	this->mainWin = mainWin;
@@ -30,21 +31,23 @@ void ControlWidget::generate() {
 	Building building;
 	building.bldType = ui.spinBoxType->value();
 	building.color = QColor(ui.lineEditColorRed->text().toInt(), ui.lineEditColorGreen->text().toInt(), ui.lineEditColorBlue->text().toInt());
-	/*building.footprint.push_back(QVector3D(-10, -10, 0));
-	building.footprint.push_back(QVector3D(10, -10, 0));
-	building.footprint.push_back(QVector3D(10, 10, 0));
-	building.footprint.push_back(QVector3D(-10, 10, 0));*/
-	building.footprint.push_back(QVector3D(-5, -8, 0));
-	building.footprint.push_back(QVector3D(5, -8, 0));
-	building.footprint.push_back(QVector3D(5, 8, 0));
-	building.footprint.push_back(QVector3D(-5, 8, 0));
 	building.roofTextureId = ui.spinBoxRoofTextureId->value();
 	building.numStories = ui.spinBoxNumStories->value();
 
 	if (building.bldType == 0) {
+		building.footprint.push_back(QVector3D(-5, -8, 0));
+		building.footprint.push_back(QVector3D(5, -8, 0));
+		building.footprint.push_back(QVector3D(5, 8, 0));
+		building.footprint.push_back(QVector3D(-5, 8, 0));
 		PMBuildingHouse::generate(mainWin->glWidget->vboRenderManager, building);
-	} else {
+	} else if (building.bldType == 1) {
+		building.footprint.push_back(QVector3D(-10, -10, 0));
+		building.footprint.push_back(QVector3D(10, -10, 0));
+		building.footprint.push_back(QVector3D(10, 10, 0));
+		building.footprint.push_back(QVector3D(-10, 10, 0));
 		PMBuildingTower::generate(mainWin->glWidget->vboRenderManager, building);
+	} else if (building.bldType == 2) {
+		PMBuildingFactory::generate(mainWin->glWidget->vboRenderManager, building);
 	}
 
 	mainWin->glWidget->shadow.makeShadowMap(mainWin->glWidget);

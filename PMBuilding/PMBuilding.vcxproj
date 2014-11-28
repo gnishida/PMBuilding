@@ -159,6 +159,7 @@
     <ClCompile Include="GLWidget3D_Shadows.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="PMBuildingFactory.cpp" />
     <ClCompile Include="PMBuildingHouse.cpp" />
     <ClCompile Include="Polygon3D.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="GeneratedFiles\ui_MainWindow.h" />
     <ClInclude Include="GLWidget3D.h" />
     <ClInclude Include="GLWidget3D_Shadows.h" />
+    <ClInclude Include="PMBuildingFactory.h" />
     <ClInclude Include="PMBuildingHouse.h" />
     <ClInclude Include="Polygon3D.h" />
     <ClInclude Include="Util.h" />

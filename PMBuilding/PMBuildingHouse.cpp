@@ -1,17 +1,17 @@
 ﻿#include "PMBuildingHouse.h"
 
-std::vector<QString> PMBuildingHouse::houseTex;
+std::vector<QString> PMBuildingHouse::textures;
 bool PMBuildingHouse::initialized = false;
 
-void PMBuildingHouse::initTex() {
+void PMBuildingHouse::initialize() {
 	if (initialized) return;
 
-	houseTex.push_back("../data/textures/LC/house/wall.jpg");
-	houseTex.push_back("../data/textures/LC/house/door.jpg");
-	houseTex.push_back("../data/textures/LC/house/garage.jpg");
-	houseTex.push_back("../data/textures/LC/house/roof.jpg");
-	houseTex.push_back("../data/textures/LC/house/window.jpg");
-	houseTex.push_back("../data/textures/LC/house/window2.jpg");
+	textures.push_back("../data/textures/LC/house/wall.jpg");
+	textures.push_back("../data/textures/LC/house/door.jpg");
+	textures.push_back("../data/textures/LC/house/garage.jpg");
+	textures.push_back("../data/textures/LC/house/roof.jpg");
+	textures.push_back("../data/textures/LC/house/window.jpg");
+	textures.push_back("../data/textures/LC/house/window2.jpg");
 
 	initialized = true;
 }
@@ -20,7 +20,7 @@ void PMBuildingHouse::initTex() {
  * 一軒家の3Dモデルを生成する。
  */
 void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building) {
-	initTex();
+	initialize();
 
 	float floorHeight = 2.5f;
 	float margin = 0.2f;
@@ -46,7 +46,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		polygon1.push_back(building.footprint.contour[2] - vec1 * 1.6f);
 		polygon1.push_back(building.footprint.contour[3]);
 	
-		rendManager.addPrism("3d_building", polygon1, 0, floorHeight, houseTex[0]);
+		rendManager.addPrism("3d_building", polygon1, 0, floorHeight, textures[0]);
 	}
 
 	// １階扉とガレージ
@@ -57,13 +57,13 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		pts[1] = Vertex(building.footprint.contour[1] + vec2 * 6.0f - vec1 * 0.1f, QColor(), normal, QVector3D(5.5, 0, 0));
 		pts[2] = Vertex(building.footprint.contour[1] + vec2 * 6.0f - vec1 * 0.1f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(5.5, floorHeight, 0));
 		pts[3] = Vertex(building.footprint.contour[1] + vec2 * 0.5f - vec1 * 0.1f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(0, floorHeight, 0));
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[2], GL_QUADS, 2|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[2], GL_QUADS, 2|mode_Lighting);
 
 		pts[0] = Vertex(building.footprint.contour[1] + vec2 * 7.0f - vec1 * 1.7f, QColor(), normal, QVector3D(0, 0, 0));
 		pts[1] = Vertex(building.footprint.contour[1] + vec2 * 8.3f - vec1 * 1.7f, QColor(), normal, QVector3D(1, 0, 0));
 		pts[2] = Vertex(building.footprint.contour[1] + vec2 * 8.3f - vec1 * 1.7f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(1, 1, 0));
 		pts[3] = Vertex(building.footprint.contour[1] + vec2 * 7.0f - vec1 * 1.7f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(0, 1, 0));
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[1], GL_QUADS, 2|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[1], GL_QUADS, 2|mode_Lighting);
 	}
 
 	// １階出窓
@@ -95,49 +95,49 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		pts[1] = Vertex(pt5, building.color, -vec2, QVector3D());
 		pts[2] = Vertex(pt8, building.color, -vec2, QVector3D());
 		pts[3] = Vertex(pt4, building.color, -vec2, QVector3D());
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[0], GL_QUADS, 1|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[0], GL_QUADS, 1|mode_Lighting);
 
 		pts[0] = Vertex(pt6, building.color, vec2, QVector3D());
 		pts[1] = Vertex(pt2, building.color, vec2, QVector3D());
 		pts[2] = Vertex(pt3, building.color, vec2, QVector3D());
 		pts[3] = Vertex(pt7, building.color, vec2, QVector3D());
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[0], GL_QUADS, 1|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[0], GL_QUADS, 1|mode_Lighting);
 
 		pts[0] = Vertex(pt4, building.color, QVector3D(0, 0, 1), QVector3D());
 		pts[1] = Vertex(pt8, building.color, QVector3D(0, 0, 1), QVector3D());
 		pts[2] = Vertex(pt7, building.color, QVector3D(0, 0, 1), QVector3D());
 		pts[3] = Vertex(pt3, building.color, QVector3D(0, 0, 1), QVector3D());
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[0], GL_QUADS, 1|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[0], GL_QUADS, 1|mode_Lighting);
 
 		pts[0] = Vertex(pt5, building.color, vec1, QVector3D());
 		pts[1] = Vertex(pt6, building.color, vec1, QVector3D());
 		pts[2] = Vertex(pt18, building.color, vec1, QVector3D());
 		pts[3] = Vertex(pt17, building.color, vec1, QVector3D());
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[0], GL_QUADS, 1|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[0], GL_QUADS, 1|mode_Lighting);
 
 		pts[0] = Vertex(pt20, building.color, vec1, QVector3D());
 		pts[1] = Vertex(pt19, building.color, vec1, QVector3D());
 		pts[2] = Vertex(pt7, building.color, vec1, QVector3D());
 		pts[3] = Vertex(pt8, building.color, vec1, QVector3D());
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[0], GL_QUADS, 1|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[0], GL_QUADS, 1|mode_Lighting);
 
 		pts[0] = Vertex(pt17, building.color, vec1, QVector3D());
 		pts[1] = Vertex(pt9, building.color, vec1, QVector3D());
 		pts[2] = Vertex(pt12, building.color, vec1, QVector3D());
 		pts[3] = Vertex(pt20, building.color, vec1, QVector3D());
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[0], GL_QUADS, 1|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[0], GL_QUADS, 1|mode_Lighting);
 
 		pts[0] = Vertex(pt10, building.color, vec1, QVector3D());
 		pts[1] = Vertex(pt18, building.color, vec1, QVector3D());
 		pts[2] = Vertex(pt19, building.color, vec1, QVector3D());
 		pts[3] = Vertex(pt11, building.color, vec1, QVector3D());
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[0], GL_QUADS, 1|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[0], GL_QUADS, 1|mode_Lighting);
 
 		pts[0] = Vertex(pt13, building.color, vec1, QVector3D(0, 0, 0));
 		pts[1] = Vertex(pt14, building.color, vec1, QVector3D(1, 0, 0));
 		pts[2] = Vertex(pt15, building.color, vec1, QVector3D(1, 1, 0));
 		pts[3] = Vertex(pt16, building.color, vec1, QVector3D(0, 1, 0));
-		rendManager.addStaticGeometry("3d_building", pts, houseTex[5], GL_QUADS, 2|mode_Lighting);
+		rendManager.addStaticGeometry("3d_building", pts, textures[5], GL_QUADS, 2|mode_Lighting);
 	}
 
 	// １階の扉の上から２階の窓の下まで
@@ -150,7 +150,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
 		polygon.push_back(building.footprint.contour[3]);
 	
-		rendManager.addPrism("3d_building", polygon, floorHeight, 3.5f, houseTex[0]);
+		rendManager.addPrism("3d_building", polygon, floorHeight, 3.5f, textures[0]);
 	}
 
 	// 日よけ
@@ -165,7 +165,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		polygon[2].setZ(3.2);
 		polygon[3] = building.footprint.contour[1] + vec2 * 6.5f;
 		polygon[3].setZ(2.8);
-		rendManager.addQuad("3d_building", polygon, houseTex[3]);
+		rendManager.addQuad("3d_building", polygon, textures[3]);
 	}
 
 	// ２階の窓を含む壁
@@ -198,7 +198,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 					verts.push_back(Vertex(pts[2], QColor(), vec1, QVector3D(1, 1, 0)));
 					verts.push_back(Vertex(pts[3], QColor(), vec1, QVector3D(0, 1, 0)));
 
-					rendManager.addStaticGeometry("3d_building", verts, houseTex[4], GL_QUADS, 2|mode_Lighting);
+					rendManager.addStaticGeometry("3d_building", verts, textures[4], GL_QUADS, 2|mode_Lighting);
 				}
 			}
 		}
@@ -227,7 +227,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 			verts.push_back(Vertex(pts[2], QColor(), vec1, QVector3D(1, 1, 0)));
 			verts.push_back(Vertex(pts[3], QColor(), vec1, QVector3D(0, 1, 0)));
 
-			rendManager.addStaticGeometry("3d_building", verts, houseTex[4], GL_QUADS, 2|mode_Lighting);
+			rendManager.addStaticGeometry("3d_building", verts, textures[4], GL_QUADS, 2|mode_Lighting);
 		}
 
 		{
@@ -255,7 +255,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 					verts.push_back(Vertex(pts[2], QColor(), vec1, QVector3D(1, 1, 0)));
 					verts.push_back(Vertex(pts[3], QColor(), vec1, QVector3D(0, 1, 0)));
 
-					rendManager.addStaticGeometry("3d_building", verts, houseTex[4], GL_QUADS, 2|mode_Lighting);
+					rendManager.addStaticGeometry("3d_building", verts, textures[4], GL_QUADS, 2|mode_Lighting);
 				}
 			}
 		}
@@ -263,7 +263,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
 		polygon.push_back(building.footprint.contour[3]);
 	
-		rendManager.addPrism("3d_building", polygon, 3.5f, 5.0f, houseTex[0]);
+		rendManager.addPrism("3d_building", polygon, 3.5f, 5.0f, textures[0]);
 	}
 
 	// ２階の窓の上から
@@ -276,7 +276,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
 		polygon.push_back(building.footprint.contour[3]);
 	
-		rendManager.addPrism("3d_building", polygon, 5.0f, 6.0f, houseTex[0]);
+		rendManager.addPrism("3d_building", polygon, 5.0f, 6.0f, textures[0]);
 	}
 
 	// ２階の三角部
@@ -284,7 +284,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		Loop3D polygon;
 		polygon.push_back(building.footprint.contour[1]);
 		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f);
-		rendManager.addTriangle("3d_building", polygon, 6.0f, 8.0f, houseTex[0]);
+		rendManager.addTriangle("3d_building", polygon, 6.0f, 8.0f, textures[0]);
 	}
 
 	// ２階の三角部
@@ -292,7 +292,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		Loop3D polygon;
 		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
 		polygon.push_back(building.footprint.contour[3]);
-		rendManager.addTriangle("3d_building", polygon, 6.0f, 8.0f, houseTex[0]);
+		rendManager.addTriangle("3d_building", polygon, 6.0f, 8.0f, textures[0]);
 	}
 
 	// 屋根
@@ -322,28 +322,28 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		polygon.push_back(pt2);
 		polygon.push_back(pt3);
 		polygon.push_back(pt4);
-		rendManager.addQuad("3d_building", polygon, houseTex[3]);
+		rendManager.addQuad("3d_building", polygon, textures[3]);
 
 		polygon.clear();
 		polygon.push_back(pt8);
 		polygon.push_back(pt11);
 		polygon.push_back(pt4);
 		polygon.push_back(pt9);
-		rendManager.addQuad("3d_building", polygon, houseTex[3]);
+		rendManager.addQuad("3d_building", polygon, textures[3]);
 
 		polygon.clear();
 		polygon.push_back(pt12);
 		polygon.push_back(pt7);
 		polygon.push_back(pt9);
 		polygon.push_back(pt4);
-		rendManager.addQuad("3d_building", polygon, houseTex[3]);
+		rendManager.addQuad("3d_building", polygon, textures[3]);
 
 		polygon.clear();
 		polygon.push_back(pt5);
 		polygon.push_back(pt13);
 		polygon.push_back(pt4);
 		polygon.push_back(pt3);
-		rendManager.addQuad("3d_building", polygon, houseTex[3]);
+		rendManager.addQuad("3d_building", polygon, textures[3]);
 
 		polygon.clear();
 		Loop3D texCoord;
@@ -355,7 +355,7 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		texCoord.push_back(QVector3D(base, 0, 0));
 		polygon.push_back(pt4);
 		texCoord.push_back(QVector3D(base, height, 0));
-		rendManager.addTriangle("3d_building", polygon, texCoord, houseTex[3]);
+		rendManager.addTriangle("3d_building", polygon, texCoord, textures[3]);
 
 		polygon.clear();
 		texCoord.clear();
@@ -367,6 +367,6 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, Building& building
 		texCoord.push_back(QVector3D(base, 0, 0));
 		polygon.push_back(pt4);
 		texCoord.push_back(QVector3D(0, height, 0));
-		rendManager.addTriangle("3d_building", polygon, texCoord, houseTex[3]);
+		rendManager.addTriangle("3d_building", polygon, texCoord, textures[3]);
 	}
 }
