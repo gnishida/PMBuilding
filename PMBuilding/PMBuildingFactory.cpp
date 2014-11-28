@@ -1,20 +1,151 @@
-#include "PMBuildingFactory.h"
+﻿#include "PMBuildingFactory.h"
 
 bool PMBuildingFactory::initialized = false;
 std::vector<QString> PMBuildingFactory::textures;
+int PMBuildingFactory::NUM_SUBTYPE = 3;
 
 void PMBuildingFactory::initialize() {
 	if (initialized) return;
+	
+	textures.push_back("../data/buildings/IHFawley/top.jpg");//1
+	textures.push_back("../data/buildings/IHFawley/tube.jpg");//2
+	textures.push_back("../data/buildings/IHFawley/buld2.jpg");//4
+	textures.push_back("../data/buildings/IHFawley/roof1.jpg");//6
+	textures.push_back("../data/buildings/IHFawley/roof2.jpg");//7
+	textures.push_back("../data/buildings/IHFawley/roof3.jpg");//8
 
-	textures.push_back("../data/textures/LC/house/wall.jpg");
-	textures.push_back("../data/textures/LC/house/door.jpg");
-	textures.push_back("../data/textures/LC/house/garage.jpg");
-	textures.push_back("../data/textures/LC/house/roof.jpg");
-	textures.push_back("../data/textures/LC/house/window.jpg");
-	textures.push_back("../data/textures/LC/house/window2.jpg");
+	for(int i=0;i<NUM_SUBTYPE;i++){
+		textures.push_back("../data/buildings/IHFawley/chimney_"+QString::number(i)+".jpg");//0
+		textures.push_back("../data/buildings/IHFawley/buld1_"+QString::number(i)+".jpg");//1
+		textures.push_back("../data/buildings/IHFawley/buld3_"+QString::number(i)+".jpg");//2
+		textures.push_back("../data/buildings/IHFawley/buld12_"+QString::number(i)+".jpg");//3
+	}
 
 	initialized = true;
 }
 
 void PMBuildingFactory::generate(VBORenderManager& rendManager, Building& building) {
+	initialize();
+
+	float dx = (building.footprint.contour[1] - building.footprint.contour[0]).length();
+	float dy = (building.footprint.contour[2] - building.footprint.contour[1]).length();
+	QVector3D vec1 = (building.footprint.contour[1] - building.footprint.contour[0]).normalized();
+	QVector3D vec2 = (building.footprint.contour[2] - building.footprint.contour[1]).normalized();		
+
+	float blockX = dx;
+	float blockY = dy;
+	float scale = 1.0f;
+
+	if (dx > 30.0f) {
+		scale = dx / 30.0f;
+	}
+	if (dy < ((1.05f/2+1.05f+4.0f+2.8f) * scale)) {
+		scale = dy / ((1.05f/2+1.05f+4.0f+2.8f)*scale);
+	}
+			
+	float towerRadius = 1.05f * scale;
+	float towerHeigh = 18.0f * scale;
+
+	float distBetweenTow = (12.0 + towerRadius * 4.1f) *scale;
+	float tubesWidth = 0.8f * scale;
+	float distTubes = 4.0f * scale;
+			
+	float buld1TexWidth = 3.3f * scale;
+	float buld1Height = 3.2f * scale;
+	float buld1Y = 2.8f * scale;
+	float roofBuld1Width = 5.5f * scale;
+	float margin1X = 1.0f * scale;
+
+	float buld2TexWidth = 3.3f * scale;
+	float buld2Height = 3.8f * scale;
+	float buld2Y = 2.5f * scale;
+	float roofBuld2Width = 1.8f * scale;
+
+	float buld3TexWidth = 3.3f * scale;
+	float buld3Height = 2.6f * scale;
+	float buld3Y = 6.0f * scale;
+	float roofBuld3Width = 2.0f * scale;
+	float margin3X = scale;
+
+	QVector3D offset = building.footprint.contour[0];
+
+	int numY = 1;
+	bool drawBld2, drawBld3, drawBld3Dupl;
+	if (floor(dy / (towerRadius / 2 + towerRadius + distTubes + buld1Y)) >= 2.0f) {
+		blockY = dy / 2.0f;
+		numY = 2;
+	}
+			
+	if (blockY > (towerRadius / 2 + towerRadius + distTubes + buld1Y + buld2Y)) {
+		drawBld2 = true;
+	} else {
+		drawBld2 = false;
+	}
+
+	if (blockY > (towerRadius/2 + towerRadius + distTubes + buld1Y + buld2Y + buld3Y)) {
+		drawBld3 = true;
+		drawBld3Dupl = true;
+	} else {
+		if (numY == 2 && dy >= (towerRadius + 2 * towerRadius + 2 * distTubes + 2 * buld1Y + 2 * buld2Y + buld3Y)) {
+			drawBld3 = true;
+			drawBld3Dupl = false;
+		} else {
+			drawBld3 = false;
+			drawBld3Dupl = false;
+		}
+	}
+
+	for(int sidesY=0;sidesY<numY;sidesY++){
+		int numCylinders = floor(blockX/distBetweenTow) + 1;
+		numCylinders = numCylinders>20?20:numCylinders;
+		float shiftY = 0;
+		for (int i = 0; i < numCylinders; i++) {
+			rendManager.addCylinder("3d_building", (i+1)*blockX/(numCylinders+1) * vec1 + towerRadius * 0.5 * vec2 + offset, towerRadius, towerRadius * 0.5f, towerHeigh, textures[6+building.subType*4]);
+			Loop3D pts;
+			QVector3D pt = ((i+1)*blockX/(numCylinders+1)-tubesWidth/2.0) * vec1 + towerRadius * 0.5 * vec2 + offset;
+			pts.push_back(pt);
+			pts.push_back(pt + tubesWidth * vec1);
+			pts.push_back(pt + tubesWidth * vec1 + (towerRadius * 0.5 + distTubes) * vec2);
+			pts.push_back(pt + (towerRadius * 0.5 + distTubes) * vec2);
+			rendManager.addBox("3d_building", offset + ((i+1)*blockX/(numCylinders+1)-tubesWidth/2.0f) * vec1 + towerRadius/2 * vec2, vec1 * tubesWidth, vec2 * (towerRadius+distTubes), QVector3D(0, 0, tubesWidth), textures[1]);
+		}
+		shiftY += towerRadius / 2 + towerRadius + distTubes;
+
+		// ビル１
+		for (int f = 1; f < 5; f++) {
+			if (f == 2 || f == 4) {
+				rendManager.addBox("3d_building", offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), QVector3D(0, 0, buld1Height), textures[6+building.subType*4+3], f);
+			} else {
+				rendManager.addBox("3d_building", offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), QVector3D(0, 0, buld1Height), textures[6+building.subType*4+1], f, floor(blockX/buld1TexWidth)+1.0f, 1);
+			}
+		}
+		rendManager.addBox("3d_building", offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), QVector3D(0, 0, buld1Height), textures[3], 5, floor(blockX/roofBuld1Width)+1.0f, 1);
+		shiftY += buld1Y;
+
+		// ビル２
+		if (drawBld2) {
+			for (int f = 1; f < 5; f++) {
+				if (f == 2 || f == 4) {
+					rendManager.addBox("3d_building", offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, QVector3D(0, 0, buld2Height), textures[2], f);
+				} else {
+					rendManager.addBox("3d_building", offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, QVector3D(0, 0, buld2Height), textures[2], f, floor(blockX/buld2TexWidth)+1.0f, 1);
+				}
+			}
+			rendManager.addBox("3d_building", offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, QVector3D(0, 0, buld2Height), textures[4], 5, floor(blockX/buld2TexWidth)+1.0f, 1);
+			shiftY += buld2Y;
+		}
+
+		// ビル３
+		if ((drawBld3 && sidesY == 0) || (drawBld3Dupl && sidesY == 1)) {
+			for (int f= 1; f < 5; f++) {
+				if (f == 2 || f == 4) {
+					rendManager.addBox("3d_building", offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, QVector3D(0, 0, buld3Height), textures[6+building.subType*4+2], f);
+				} else {
+					rendManager.addBox("3d_building", offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, QVector3D(0, 0, buld3Height), textures[6+building.subType*4+2], f, floor(blockX/buld3TexWidth)+1.0f, 1);
+				}
+			}
+			rendManager.addBox("3d_building", offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, QVector3D(0, 0, buld3Height), textures[5], 5, floor(blockX/buld3TexWidth)+1.0f, 1);
+			shiftY += buld3Y;
+		}
+	}
 }

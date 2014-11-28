@@ -8,6 +8,7 @@ class Building {
 public:
 	Polygon3D footprint;
 	int bldType;
+	int subType;
 	int numStories;
 	QColor color;
 	int roofTextureId;

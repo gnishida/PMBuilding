@@ -47,6 +47,11 @@ void ControlWidget::generate() {
 		building.footprint.push_back(QVector3D(-10, 10, 0));
 		PMBuildingTower::generate(mainWin->glWidget->vboRenderManager, building);
 	} else if (building.bldType == 2) {
+		building.footprint.push_back(QVector3D(-20, -20, 0));
+		building.footprint.push_back(QVector3D(20, -20, 0));
+		building.footprint.push_back(QVector3D(20, 20, 0));
+		building.footprint.push_back(QVector3D(-20, 20, 0));
+		building.subType = 0;
 		PMBuildingFactory::generate(mainWin->glWidget->vboRenderManager, building);
 	}
 

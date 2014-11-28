@@ -9,6 +9,9 @@ class PMBuildingFactory {
 public:
 	static std::vector<QString> textures;
 	static bool initialized;
+	static int NUM_SUBTYPE;
+	static int NUM_SUBTYPE_1;
+	static int NUM_SUBTYPE_2;
 
 public:
 	static void initialize();

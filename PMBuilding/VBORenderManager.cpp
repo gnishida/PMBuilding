@@ -311,6 +311,62 @@ void VBORenderManager::addBox(const QString& geoName, const QVector3D& center, c
 	addStaticGeometry(geoName, vert, "", GL_QUADS, 1|mode_Lighting);
 }
 
+void VBORenderManager::addBox(const QString& geoName, const QVector3D& offset, const QVector3D& vec1, const QVector3D& vec2, const QVector3D& vec3, const QString& textureName, int faceNo, float s1, float t1) {
+	std::vector<QVector3D> pts;
+	pts.push_back(offset);
+	pts.push_back(offset + vec1);
+	pts.push_back(offset + vec1 + vec2);
+	pts.push_back(offset + vec2);
+
+	pts.push_back(offset + vec3);
+	pts.push_back(offset + vec1 + vec3);
+	pts.push_back(offset + vec1 + vec2 + vec3);
+	pts.push_back(offset + vec2 + vec3);
+
+	float s0 = 0.0f;
+	float t0 = 0.0f;
+
+	std::vector<Vertex> verts;
+	if (faceNo == 2 || faceNo == 0) { // 背面
+		verts.push_back(Vertex(pts[2], QColor(), vec2.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[3], QColor(), vec2.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[7], QColor(), vec2.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[6], QColor(), vec2.normalized(), QVector3D(s0, t1, 0)));
+	}
+	if (faceNo == 4 || faceNo == 0) { // 前面
+		verts.push_back(Vertex(pts[0], QColor(), -vec2.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[1], QColor(), -vec2.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[5], QColor(), -vec2.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[4], QColor(), -vec2.normalized(), QVector3D(s0, t1, 0)));
+	}
+	if (faceNo == 1 || faceNo == 0) { // 右面
+		verts.push_back(Vertex(pts[1], QColor(), vec1.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[2], QColor(), vec1.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[6], QColor(), vec1.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[5], QColor(), vec1.normalized(), QVector3D(s0, t1, 0)));
+	}
+	if (faceNo == 3 || faceNo == 0) { // 左面
+		verts.push_back(Vertex(pts[3], QColor(), vec1.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[0], QColor(), vec1.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[4], QColor(), vec1.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[7], QColor(), vec1.normalized(), QVector3D(s0, t1, 0)));
+	}
+	if (faceNo == 5 || faceNo == 0) { // 上面
+		verts.push_back(Vertex(pts[4], QColor(), vec3.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[5], QColor(), vec3.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[6], QColor(), vec3.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[7], QColor(), vec3.normalized(), QVector3D(s0, t1, 0)));
+	}
+	if (faceNo == 6 || faceNo == 0) { // 底面
+		verts.push_back(Vertex(pts[3], QColor(), -vec3.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[2], QColor(), -vec3.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[1], QColor(), -vec3.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[0], QColor(), -vec3.normalized(), QVector3D(s0, t1, 0)));
+	}
+
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
+}
+
 void VBORenderManager::addLine(const QString& geoName, const QVector3D& pt1, const QVector3D& pt2, const QColor& color) {
 	std::vector<Vertex> vert;
 
@@ -466,6 +522,10 @@ void VBORenderManager::addPolygon(const QString& geoName, Loop3D& polygon, float
 	addStaticGeometry(geoName, verts, "", GL_QUADS, 1|mode_Lighting);
 }
 
+/**
+ * ポリゴンプリズムを構築する。（テクスチャ版）
+ * テクスチャは側面のみ。上面と底面はなし。
+ */
 void VBORenderManager::addPrism(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QString& textureName) {
 	std::vector<Vertex> verts;
 
@@ -485,6 +545,10 @@ void VBORenderManager::addPrism(const QString& geoName, Loop3D& polygon, float b
 	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
 }
 
+/**
+ * ポリゴンプリズムを構築する。（カラー版）
+ * addTopAndBase=trueなら、上面と底面を追加する。
+ */
 void VBORenderManager::addPrism(const QString& geoName, Loop3D& polygon, float baseHeight, float topHeight, const QColor& color, bool addTopAndBase) {
 	std::vector<Vertex> verts;
 
@@ -524,6 +588,43 @@ void VBORenderManager::addWedge(const QString& geoName, Loop3D& polygon, float b
 		verts.push_back(Vertex(QVector3D(polygon[3].x(), polygon[3].y(), baseHeight), QColor(), normal, QVector3D(length, baseHeight, 0)));
 		verts.push_back(Vertex(QVector3D((polygon[2].x() + polygon[3].x()) * 0.5, (polygon[2].y() + polygon[3].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
 		verts.push_back(Vertex(QVector3D((polygon[2].x() + polygon[3].x()) * 0.5, (polygon[2].y() + polygon[3].y()) * 0.5, topHeight), QColor(), normal, QVector3D(length * 0.5, topHeight, 0)));
+	}
+
+	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);
+}
+
+/**
+ * 円柱を構築する。（テクスチャ版）
+* テクスチャは側面のみ。上面と底面はなし。
+ */
+void VBORenderManager::addCylinder(const QString& geoName, const QVector3D& center, float baseRadius, float topRadius, float height, const QString& textureName) {
+	std::vector<Vertex> verts;
+
+	int slices = 10;
+	int stacks = 10;
+	for (int i = 0; i < stacks; ++i) {
+		float z1 = height / stacks * i;
+		float z2 = height / stacks * (i + 1);
+		float radius1 = (topRadius - baseRadius) / stacks * i + baseRadius;
+		float radius2 = (topRadius - baseRadius) / stacks * (i + 1) + baseRadius;
+
+		for (int j = 0; j < slices; ++j) {
+			float theta1 = 2.0 * M_PI * j / slices;
+			float theta2 = 2.0 * M_PI * (j + 1) / slices;
+			float x1 = radius1 * cosf(theta1);
+			float y1 = radius1 * sinf(theta1);
+			float x2 = radius1 * cosf(theta2);
+			float y2 = radius1 * sinf(theta2);
+			float x3 = radius2 * cosf(theta2);
+			float y3 = radius2 * sinf(theta2);
+			float x4 = radius2 * cosf(theta1);
+			float y4 = radius2 * sinf(theta1);
+
+			verts.push_back(Vertex(QVector3D(x1, y1, z1) + center, QColor(), QVector3D(x1, y1, 0), QVector3D((float)j / slices, (float)i / stacks, 0)));
+			verts.push_back(Vertex(QVector3D(x2, y2, z1) + center, QColor(), QVector3D(x2, y2, 0), QVector3D((float)(j+1) / slices, (float)i / stacks, 0)));
+			verts.push_back(Vertex(QVector3D(x3, y3, z2) + center, QColor(), QVector3D(x3, y3, 0), QVector3D((float)(j+1) / slices, (float)(i+1) / stacks, 0)));
+			verts.push_back(Vertex(QVector3D(x4, y4, z2) + center, QColor(), QVector3D(x4, y4, 0), QVector3D((float)j / slices, (float)(i+1) / stacks, 0)));
+		}
 	}
 
 	addStaticGeometry(geoName, verts, textureName, GL_QUADS, 2|mode_Lighting);

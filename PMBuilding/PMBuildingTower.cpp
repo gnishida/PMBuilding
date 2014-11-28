@@ -6,7 +6,7 @@
 #include "PMBuildingTower.h"
 #include "qdir.h"
 
-const float storyHeight=4.2f;
+const float storyHeight = 4.2f;
 
 bool PMBuildingTower::initialized = false;
 
