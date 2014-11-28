@@ -40,12 +40,6 @@
     <ClCompile Include="MainWindow.cpp">
       <Filter>Main Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_MainWindow.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_MainWindow.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_MainWindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -64,9 +58,6 @@
     <ClCompile Include="Util.cpp">
       <Filter>Main Files</Filter>
     </ClCompile>
-    <ClCompile Include="VBOGeoBuilding.cpp">
-      <Filter>VBO</Filter>
-    </ClCompile>
     <ClCompile Include="VBORenderManager.cpp">
       <Filter>VBO</Filter>
     </ClCompile>
@@ -78,6 +69,18 @@
     </ClCompile>
     <ClCompile Include="ControlWidget.cpp">
       <Filter>Main Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PMBuildingHouse.cpp">
+      <Filter>VBO</Filter>
+    </ClCompile>
+    <ClCompile Include="PMBuildingTower.cpp">
+      <Filter>VBO</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MainWindow.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MainWindow.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ControlWidget.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -128,13 +131,7 @@
     <ClInclude Include="Util.h">
       <Filter>Main Files</Filter>
     </ClInclude>
-    <ClInclude Include="VBOBuilding.h">
-      <Filter>VBO</Filter>
-    </ClInclude>
     <ClInclude Include="VBOUtil.h">
-      <Filter>VBO</Filter>
-    </ClInclude>
-    <ClInclude Include="VBOGeoBuilding.h">
       <Filter>VBO</Filter>
     </ClInclude>
     <ClInclude Include="VBORenderManager.h">
@@ -145,6 +142,15 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_ControlWidget.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PMBuildingHouse.h">
+      <Filter>VBO</Filter>
+    </ClInclude>
+    <ClInclude Include="PMBuildingTower.h">
+      <Filter>VBO</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>VBO</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include "VBOGeoBuilding.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags) {
 	ui.setupUi(this);
@@ -13,9 +12,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, 
 	// setup the GL widget
 	glWidget = new GLWidget3D(this);
 	setCentralWidget(glWidget);
-
-	// load textures
-	VBOGeoBuilding::initBuildingsTex();
 
 	controlWidget->show();
 	addDockWidget(Qt::LeftDockWidgetArea, controlWidget);

@@ -2,7 +2,8 @@
 #include <QFileDialog>
 #include "MainWindow.h"
 #include "GLWidget3D.h"
-#include "VBOGeoBuilding.h"
+#include "PMBuildingTower.h"
+#include "PMBuildingHouse.h"
 
 ControlWidget::ControlWidget(MainWindow* mainWin) : QDockWidget("Control Widget", (QWidget*)mainWin) {
 	this->mainWin = mainWin;
@@ -40,7 +41,11 @@ void ControlWidget::generate() {
 	building.roofTextureId = ui.spinBoxRoofTextureId->value();
 	building.numStories = ui.spinBoxNumStories->value();
 
-	VBOGeoBuilding::generateBuilding(mainWin->glWidget->vboRenderManager, building);
+	if (building.bldType == 0) {
+		PMBuildingHouse::generate(mainWin->glWidget->vboRenderManager, building);
+	} else {
+		PMBuildingTower::generate(mainWin->glWidget->vboRenderManager, building);
+	}
 
 	mainWin->glWidget->shadow.makeShadowMap(mainWin->glWidget);
 	mainWin->glWidget->updateGL();
