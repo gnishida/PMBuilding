@@ -91,6 +91,9 @@
     <ClCompile Include="PMBuildingFactory.cpp">
       <Filter>VBO</Filter>
     </ClCompile>
+    <ClCompile Include="PMBuildingSchool.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.ui">
@@ -157,6 +160,9 @@
     </ClInclude>
     <ClInclude Include="PMBuildingFactory.h">
       <Filter>VBO</Filter>
+    </ClInclude>
+    <ClInclude Include="PMBuildingSchool.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

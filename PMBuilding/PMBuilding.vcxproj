@@ -161,6 +161,7 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="PMBuildingFactory.cpp" />
     <ClCompile Include="PMBuildingHouse.cpp" />
+    <ClCompile Include="PMBuildingSchool.cpp" />
     <ClCompile Include="Polygon3D.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="PMBuildingTower.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="GLWidget3D_Shadows.h" />
     <ClInclude Include="PMBuildingFactory.h" />
     <ClInclude Include="PMBuildingHouse.h" />
+    <ClInclude Include="PMBuildingSchool.h" />
     <ClInclude Include="Polygon3D.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Building.h" />

@@ -13,6 +13,7 @@ ControlWidget::ControlWidget(MainWindow* mainWin) : QDockWidget("Control Widget"
 	ui.setupUi(this);
 
 	ui.spinBoxType->setValue(0);
+	ui.spinBoxSubType->setValue(0);
 	ui.lineEditColorRed->setText("192");
 	ui.lineEditColorGreen->setText("192");
 	ui.lineEditColorBlue->setText("192");
@@ -30,6 +31,7 @@ void ControlWidget::generate() {
 
 	Building building;
 	building.bldType = ui.spinBoxType->value();
+	building.subType = ui.spinBoxSubType->value();
 	building.color = QColor(ui.lineEditColorRed->text().toInt(), ui.lineEditColorGreen->text().toInt(), ui.lineEditColorBlue->text().toInt());
 	building.roofTextureId = ui.spinBoxRoofTextureId->value();
 	building.numStories = ui.spinBoxNumStories->value();
@@ -51,7 +53,6 @@ void ControlWidget::generate() {
 		building.footprint.push_back(QVector3D(20, -20, 0));
 		building.footprint.push_back(QVector3D(20, 20, 0));
 		building.footprint.push_back(QVector3D(-20, 20, 0));
-		building.subType = 0;
 		PMBuildingFactory::generate(mainWin->glWidget->vboRenderManager, building);
 	}
 

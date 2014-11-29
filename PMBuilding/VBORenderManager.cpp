@@ -311,7 +311,7 @@ void VBORenderManager::addBox(const QString& geoName, const QVector3D& center, c
 	addStaticGeometry(geoName, vert, "", GL_QUADS, 1|mode_Lighting);
 }
 
-void VBORenderManager::addBox(const QString& geoName, const QVector3D& offset, const QVector3D& vec1, const QVector3D& vec2, const QVector3D& vec3, const QString& textureName, int faceNo, float s1, float t1) {
+void VBORenderManager::addBox(const QString& geoName, const QVector3D& offset, const QVector3D& vec1, const QVector3D& vec2, const QVector3D& vec3, const QString& textureName, int faceNo, float s0, float t0, float s1, float t1) {
 	std::vector<QVector3D> pts;
 	pts.push_back(offset);
 	pts.push_back(offset + vec1);
@@ -322,9 +322,6 @@ void VBORenderManager::addBox(const QString& geoName, const QVector3D& offset, c
 	pts.push_back(offset + vec1 + vec3);
 	pts.push_back(offset + vec1 + vec2 + vec3);
 	pts.push_back(offset + vec2 + vec3);
-
-	float s0 = 0.0f;
-	float t0 = 0.0f;
 
 	std::vector<Vertex> verts;
 	if (faceNo == 2 || faceNo == 0) { // 背面
