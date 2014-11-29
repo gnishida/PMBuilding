@@ -70,103 +70,153 @@ void PMBuildingSchool::generateType0(VBORenderManager& rendManager, Building& bu
 	rendManager.addBox("3d_building", offset + vec1 * shiftX + vec2 * frontSideDepth, farSide * vec1, vec2 * (dyOrig-frontSideDepth*2), QVector3D(0, 0, frontHeigh), textures[texShift+5], 0, 0, farSide/(frontHeigh*49/200), 1.0f);
 	//renderFace(3,new QVector3D(shiftX,frontSideDepth,0),farSide,dyOrig-frontSideDepth*2,frontHeigh,&normals,&textures,texShift+5,0,farSide/(frontHeigh*49/200),0.0f,1.0f);
 	shiftX+=farSide;
-	//columns
 
+	//columns
 	float columnSpan = 5.6f + frontHeigh * 56.0f / 200;
 	int numColumns = floor(dx / columnSpan);
 	columnSpan = dx / numColumns;
 	float colShift = 0.0f;
 	for(int c = 0; c < numColumns; c++) {
+		rendManager.addBox("3d_building", offset + vec1 * (shiftX + colShift) + vec2 * frontSideDepth, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 1, 0, 0, 56.0f/679, 122.0f/200.0f);
 		//renderFace(1,new QVector3D(shiftX+colShift,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+		rendManager.addBox("3d_building", offset + vec1 * (shiftX + colShift) + vec2 * frontSideDepth, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 3, 0, 0, 56.0f/679, 122.0f/200.0f);
 		//renderFace(3,new QVector3D(shiftX+colShift,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+		rendManager.addBox("3d_building", offset + vec1 * (shiftX + colShift) + vec2 * frontSideDepth, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 2, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 		//renderFace(2,new QVector3D(shiftX+colShift,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
+		rendManager.addBox("3d_building", offset + vec1 * (shiftX + colShift) + vec2 * frontSideDepth, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 4, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 		//renderFace(4,new QVector3D(shiftX+colShift,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
 		colShift += columnSpan;
 	}
+
 	//top
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), dx * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 3, 0, 122.0f/200.0f, dx/(frontWidth), 1.0f);
 	//renderFace(3,new QVector3D(shiftX,frontSideDepth,frontHeigh*122.0f/200.0f),dx,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,dx/(frontWidth),122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), dx * vec1, frontSideDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 6, 0, 122.0f/200.0f, 1.0f, 1.0f);
 	//renderFace(6,new QVector3D(shiftX,frontSideDepth,frontHeigh*122.0f/200.0f),dx,frontSideDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,1.0f,122.0f/200.0f,1.0f);
+
 	//back
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * 2.0f * vec2, dx * vec1, (dyOrig-frontSideDepth * 2.0) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift + 3], 3, 0, 0.5f, dx*200*200.0f/(frontHeigh*1429*122.0f), 1.0f);
 	//renderFace(3,new QVector3D(shiftX,frontSideDepth*2.0f,0),dx,dyOrig-frontSideDepth*2,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+3,0,dx*200*200.0f/(frontHeigh*1429*122.0f),0.5f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + (frontSideDepth+colDepth) * vec2, 0 * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift + 4], 2, 270.0f/696, 0, 452.0f/696, 176.0f/200);
 	//renderFace(2,new QVector3D(shiftX,frontSideDepth+colDepth,0),0,frontSideDepth-colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+4,270.0f/696,452.0f/696,0,176.0f/200);
+	rendManager.addBox("3d_building", offset + (shiftX + dx) * vec1 + frontSideDepth * vec2, 0 * vec1, frontSideDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift + 4], 4, 270.0f/696, 0, 452.0f/696, 176.0f/200);
 	//renderFace(4,new QVector3D(shiftX+dx,frontSideDepth,0),0,frontSideDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+4,270.0f/696,452.0f/696,0,176.0f/200);
-	
 	shiftX += dx;
 
 	// 2. MAIN
 	//front
 	//left
+	rendManager.addBox("3d_building", offset + shiftX * vec1, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 1, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(1,new QVector3D(shiftX,0,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 3, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(3,new QVector3D(shiftX,0,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 2, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(2,new QVector3D(shiftX,0,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
 	//right
+	rendManager.addBox("3d_building", offset + (shiftX+frontHeigh*299.0f/200.0f) * vec1, frontHeigh*115.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 1, 299.0f/679.0f, 0, 414.0f/679, 122.0f/200.0f);
 	//renderFace(1,new QVector3D(shiftX+frontHeigh*299.0f/200.0f,0,0),frontHeigh*115.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,299.0f/679.0f,414.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_building", offset + (shiftX+frontHeigh*299.0f/200.0f) * vec1, frontHeigh*115.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 3, 299.0f/679.0f, 0, 414.0f/679, 122.0f/200.0f);
 	//renderFace(3,new QVector3D(shiftX+frontHeigh*299.0f/200.0f,0,0),frontHeigh*115.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,299.0f/679.0f,414.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_building", offset + (shiftX+frontHeigh*299.0f/200.0f) * vec1, frontHeigh*115.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 2, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 	//renderFace(2,new QVector3D(shiftX+frontHeigh*299.0f/200.0f,0,0),frontHeigh*115.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_building", offset + (shiftX+frontHeigh*299.0f/200.0f) * vec1, frontHeigh*115.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 4, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 	//renderFace(4,new QVector3D(shiftX+frontHeigh*299.0f/200.0f,0,0),frontHeigh*115.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
 
 	//top
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), frontHeigh*679.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 1, 0, 122.0f/200.0f, 1, 1);
 	//renderFace(1,new QVector3D(shiftX,0,frontHeigh*122.0f/200.0f),frontHeigh*679.0f/200,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,1.0f,122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), frontHeigh*679.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 3, 0, 122.0f/200.0f, 1, 1);
 	//renderFace(3,new QVector3D(shiftX,0,frontHeigh*122.0f/200.0f),frontHeigh*679.0f/200,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,1.0f,122.0f/200.0f,1.0f);
 
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), frontHeigh*679.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 5, 0, 122.0f/200.0f, 1, 1);
 	//renderFace(5,new QVector3D(shiftX,0,frontHeigh*122.0f/200.0f),frontHeigh*679.0f/200,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,1.0f,122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), frontHeigh*679.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 6, 0, 122.0f/200.0f, 1, 1);
 	//renderFace(6,new QVector3D(shiftX,0,frontHeigh*122.0f/200.0f),frontHeigh*679.0f/200,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,1.0f,122.0f/200.0f,1.0f);
 
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), frontHeigh*679.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 2, 0, 122.0f/200.0f, colDepth/(frontHeigh*679.0f/200), 1);
 	//renderFace(2,new QVector3D(shiftX,0,frontHeigh*122.0f/200.0f),frontHeigh*679.0f/200,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*679.0f/200)),122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), frontHeigh*679.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 4, 0, 122.0f/200.0f, colDepth/(frontHeigh*679.0f/200), 1);
 	//renderFace(4,new QVector3D(shiftX,0,frontHeigh*122.0f/200.0f),frontHeigh*679.0f/200,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*679.0f/200)),122.0f/200.0f,1.0f);
+
 	//side
 	//top
-
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 2, 0, 122.0f/200.0f, (frontSideDepth-colDepth)/(frontHeigh*679.0f/200), 1);
 	//renderFace(2,new QVector3D(shiftX,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(frontSideDepth-colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 4, 0, 122.0f/200.0f, (frontSideDepth-colDepth)/(frontHeigh*679.0f/200), 1);
 	//renderFace(4,new QVector3D(shiftX,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(frontSideDepth-colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
 
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 5, 0, 122.0f/200.0f, (colDepth)/(frontHeigh*679.0f/200), 1);
 	//renderFace(5,new QVector3D(shiftX,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 6, 0, 122.0f/200.0f, (colDepth)/(frontHeigh*679.0f/200), 1);
 	//renderFace(6,new QVector3D(shiftX,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
 
 	//column
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + colDepth * vec2, colDepth * vec1, (frontHeigh*56.0f/200-colDepth) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 2, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(2,new QVector3D(shiftX,colDepth,0),colDepth,frontHeigh*56.0f/200-colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1, colDepth * vec1, frontHeigh*56.0f/200 * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 4, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(4,new QVector3D(shiftX,0,0),colDepth,frontHeigh*56.0f/200,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + colDepth * vec2, colDepth * vec1, (frontHeigh*56.0f/200-colDepth) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 1, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 	//renderFace(1,new QVector3D(shiftX,colDepth,0),colDepth,frontHeigh*56.0f/200-colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
 
 	// front back
+	rendManager.addBox("3d_buidling", offset + shiftX * vec1 + frontSideDepth * vec2, frontHeigh*679.0f/200 * vec1, (dyOrig-frontSideDepth) * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+1], 3);
 	//renderFace(3,new QVector3D(shiftX,frontSideDepth,0),frontHeigh*679.0f/200,dyOrig-frontSideDepth,frontHeigh,&normals,&textures,texShift+1,1.0f,1.0f);
 	//front right
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-frontHeigh*56.0f/200) * vec1, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 1, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(1,new QVector3D(shiftX+frontWidth-frontHeigh*56.0f/200,0,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-frontHeigh*56.0f/200) * vec1, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 3, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(3,new QVector3D(shiftX+frontWidth-frontHeigh*56.0f/200,0,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-frontHeigh*56.0f/200) * vec1, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 4, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 	//renderFace(4,new QVector3D(shiftX+frontWidth-frontHeigh*56.0f/200,0,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
 	//top
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-colDepth) * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 2, 0, 122.0f/200.0f, (frontSideDepth-colDepth)/(frontHeigh*679.0f/200), 1.0f);
 	//renderFace(2,new QVector3D(shiftX+frontWidth-colDepth,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(frontSideDepth-colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-colDepth) * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 4, 0, 122.0f/200.0f, (frontSideDepth-colDepth)/(frontHeigh*679.0f/200), 1.0f);
 	//renderFace(4,new QVector3D(shiftX+frontWidth-colDepth,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(frontSideDepth-colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
 
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-colDepth) * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 5, 0, 122.0f/200.0f, (colDepth)/(frontHeigh*679.0f/200), 1.0f);
 	//renderFace(5,new QVector3D(shiftX+frontWidth-colDepth,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-colDepth) * vec1 + colDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), colDepth * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 6, 0, 122.0f/200.0f, (colDepth)/(frontHeigh*679.0f/200), 1.0f);
 	//renderFace(6,new QVector3D(shiftX+frontWidth-colDepth,colDepth,frontHeigh*122.0f/200.0f),colDepth,frontSideDepth-colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth)/(frontHeigh*679.0f/200),122.0f/200.0f,1.0f);
+
 	//column
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-colDepth) * vec1 + colDepth * vec2, colDepth * vec1, (frontHeigh*56.0f/200-colDepth) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 4, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(4,new QVector3D(shiftX+frontWidth-colDepth,colDepth,0),colDepth,frontHeigh*56.0f/200-colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-colDepth) * vec1, colDepth * vec1, (frontHeigh*56.0f/200-colDepth) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 2, 0, 0, 56.0f/679, 122.0f/200.0f);
 	//renderFace(2,new QVector3D(shiftX+frontWidth-colDepth,0,0),colDepth,frontHeigh*56.0f/200,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+	rendManager.addBox("3d_buidling", offset + (shiftX+frontWidth-colDepth) * vec1 + colDepth * vec2, colDepth * vec1, (frontHeigh*56.0f/200-colDepth) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 1, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 	//renderFace(1,new QVector3D(shiftX+frontWidth-colDepth,colDepth,0),colDepth,frontHeigh*56.0f/200-colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
-
-
-
 	shiftX += frontWidth;
 
 	// 2. RIGHT
 	//columns
 	colShift = 0.0f;
 	for (int c = 0; c < numColumns; c++) {
+		rendManager.addBox("3d_building", offset + (shiftX+dx-colShift-frontHeigh*56.0f/200) * vec1 + frontSideDepth * vec2, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 1, 0, 0, 56.0f/679, 122.0f/200.0f);
 		//renderFace(1,new QVector3D(shiftX+dx-(colShift)-frontHeigh*56.0f/200,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+		rendManager.addBox("3d_building", offset + (shiftX+dx-colShift-frontHeigh*56.0f/200) * vec1 + frontSideDepth * vec2, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 3, 0, 0, 56.0f/679, 122.0f/200.0f);
 		//renderFace(3,new QVector3D(shiftX+dx-(colShift)-frontHeigh*56.0f/200,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,56.0f/679,0.0f,122.0f/200.0f);
+		rendManager.addBox("3d_building", offset + (shiftX+dx-colShift-frontHeigh*56.0f/200) * vec1 + frontSideDepth * vec2, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 2, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 		//renderFace(2,new QVector3D(shiftX+dx-(colShift)-frontHeigh*56.0f/200,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
+		rendManager.addBox("3d_building", offset + (shiftX+dx-colShift-frontHeigh*56.0f/200) * vec1 + frontSideDepth * vec2, frontHeigh*56.0f/200 * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift], 4, 0, 0, (colDepth/(frontHeigh*56.0f/200))*56.0f/679, 122.0f/200.0f);
 		//renderFace(4,new QVector3D(shiftX+dx-(colShift)-frontHeigh*56.0f/200,frontSideDepth,0),frontHeigh*56.0f/200,colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+0,0,(colDepth/(frontHeigh*56.0f/200))*56.0f/679,0.0f,122.0f/200.0f);
 		colShift += columnSpan;
 	}
+
 	//top
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), dx * vec1, colDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 3, 0, 122.0f/200.0f, dx/(frontWidth), 1.0f);
 	//renderFace(3,new QVector3D(shiftX,frontSideDepth,frontHeigh*122.0f/200.0f),dx,colDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,dx/(frontWidth),122.0f/200.0f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * vec2 + QVector3D(0, 0, frontHeigh*122.0f/200.0f), dx * vec1, frontSideDepth * vec2, QVector3D(0, 0, frontHeigh*78.0f/200.0f), textures[texShift], 6, 0, 122.0f/200.0f, 1, 1.0f);
 	//renderFace(6,new QVector3D(shiftX,frontSideDepth,frontHeigh*122.0f/200.0f),dx,frontSideDepth,frontHeigh*78.0f/200.0f,&normals,&textures,texShift+0,0,1.0f,122.0f/200.0f,1.0f);
 	//back
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * 2.0f * vec2, dx * vec1, (dyOrig-frontSideDepth*2) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift+3], 3, 0, 0.5f, dx*200*200.0f/(frontHeigh*1429*122.0f), 1.0f);
 	//renderFace(3,new QVector3D(shiftX,frontSideDepth*2.0f,0),dx,dyOrig-frontSideDepth*2,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+3,0,dx*200*200.0f/(frontHeigh*1429*122.0f),0.5f,1.0f);
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * vec2, 0 * vec1, frontSideDepth * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift+4], 2, 270.0f/696, 0, 452.0f/696, 176.0f/200);
 	//renderFace(2,new QVector3D(shiftX,frontSideDepth,0),0,frontSideDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+4,270.0f/696,452.0f/696,0,176.0f/200);
+	rendManager.addBox("3d_building", offset + (shiftX + dx) * vec1 + (frontSideDepth+colDepth) * vec2, 0 * vec1, (frontSideDepth-colDepth) * vec2, QVector3D(0, 0, frontHeigh*122.0f/200.0f), textures[texShift+4], 4, 270.0f/696, 0, 452.0f/696, 176.0f/200);
 	//renderFace(4,new QVector3D(shiftX+dx,frontSideDepth+colDepth,0),0,frontSideDepth-colDepth,frontHeigh*122.0f/200.0f,&normals,&textures,texShift+4,270.0f/696,452.0f/696,0,176.0f/200);
 	shiftX += dx;
+	rendManager.addBox("3d_building", offset + shiftX * vec1 + frontSideDepth * vec2, farSide * vec1, (dyOrig-frontSideDepth*2) * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+5], 3, 0, 0, farSide/(frontHeigh*49/200), 1);
 	//renderFace(3,new QVector3D(shiftX,frontSideDepth,0),farSide,dyOrig-frontSideDepth*2,frontHeigh,&normals,&textures,texShift+5,0,farSide/(frontHeigh*49/200),0.0f,1.0f);
 	shiftX += farSide;
 
@@ -184,19 +234,26 @@ void PMBuildingSchool::generateType0(VBORenderManager& rendManager, Building& bu
 		texBackEnd+=400.0f/1340;
 		backX-=texBackEnd*backWidth;
 	}
+	rendManager.addBox("3d_building", offset, dxOrig * vec1, dyOrig * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+2], 1, texBackStart, 0, texBackEnd, 1);
 	//renderFace(1,new QVector3D(0,0,0),dxOrig,dyOrig,frontHeigh,&normals,&textures,texShift+2,texBackStart,texBackEnd,0,1.0f);
 
 	// 4. SIDES
 	//left
 	float doorDepth=frontHeigh*244.0f/200;
 	float dyHalf=(dyOrig-frontSideDepth-doorDepth)/2.0f;
+	rendManager.addBox("3d_building", offset + vec2 * frontSideDepth, dxOrig * vec1, dyHalf * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+6], 4, dyHalf/(frontHeigh*182/200), 0, 1, 1);
 	//renderFace(4,new QVector3D(0,frontSideDepth,0),dxOrig,dyHalf,frontHeigh,&normals,&textures,texShift+6,dyHalf/(frontHeigh*182/200),1.0f,0,1.0f);
+	rendManager.addBox("3d_building", offset + vec2 * (frontSideDepth+dyHalf), dxOrig * vec1, doorDepth * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+4], 4, 452.0f/696.0f, 0, 1, 1);
 	//renderFace(4,new QVector3D(0,frontSideDepth+dyHalf,0),dxOrig,doorDepth,frontHeigh,&normals,&textures,texShift+4,452.0f/696.0f,1.0f,0,1.0f);
+	rendManager.addBox("3d_building", offset + vec2 * (dyOrig-dyHalf), dxOrig * vec1, dyHalf * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+6], 4, dyHalf/(frontHeigh*182/200), 0, 1, 1);
 	//renderFace(4,new QVector3D(0,dyOrig-dyHalf,0),dxOrig,dyHalf,frontHeigh,&normals,&textures,texShift+6,dyHalf/(frontHeigh*182/200),1.0f,0,1.0f);
 
 
+	rendManager.addBox("3d_buidling", offset + vec2 * frontSideDepth, dxOrig * vec1, dyHalf * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+6], 2, dyHalf/(frontHeigh*182/200), 0, 1, 1);
 	//renderFace(2,new QVector3D(0,frontSideDepth,0),dxOrig,dyHalf,frontHeigh,&normals,&textures,texShift+6,dyHalf/(frontHeigh*182/200),1.0f,0,1.0f);
+	rendManager.addBox("3d_buidling", offset + vec2 * (frontSideDepth+dyHalf), dxOrig * vec1, doorDepth * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+4], 2, 452.0f/696.0f, 0, 1, 1);
 	//renderFace(2,new QVector3D(0,frontSideDepth+dyHalf,0),dxOrig,doorDepth,frontHeigh,&normals,&textures,texShift+4,452.0f/696.0f,1.0f,0,1.0f);
+	rendManager.addBox("3d_buidling", offset + vec2 * (dyOrig-dyHalf), dxOrig * vec1, dyHalf * vec2, QVector3D(0, 0, frontHeigh), textures[texShift+6], 2, dyHalf/(frontHeigh*182/200), 0, 1, 1);
 	//renderFace(2,new QVector3D(0,dyOrig-dyHalf,0),dxOrig,dyHalf,frontHeigh,&normals,&textures,texShift+6,dyHalf/(frontHeigh*182/200),1.0f,0,1.0f);
 
 	// 5. ROOF

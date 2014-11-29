@@ -5,6 +5,7 @@
 #include "PMBuildingTower.h"
 #include "PMBuildingHouse.h"
 #include "PMBuildingFactory.h"
+#include "PMBuildingSchool.h"
 
 ControlWidget::ControlWidget(MainWindow* mainWin) : QDockWidget("Control Widget", (QWidget*)mainWin) {
 	this->mainWin = mainWin;
@@ -54,6 +55,12 @@ void ControlWidget::generate() {
 		building.footprint.push_back(QVector3D(20, 20, 0));
 		building.footprint.push_back(QVector3D(-20, 20, 0));
 		PMBuildingFactory::generate(mainWin->glWidget->vboRenderManager, building);
+	} else if (building.bldType == 3) {
+		building.footprint.push_back(QVector3D(-20, -20, 0));
+		building.footprint.push_back(QVector3D(20, -20, 0));
+		building.footprint.push_back(QVector3D(20, 20, 0));
+		building.footprint.push_back(QVector3D(-20, 20, 0));
+		PMBuildingSchool::generate(mainWin->glWidget->vboRenderManager, building);
 	}
 
 	mainWin->glWidget->shadow.makeShadowMap(mainWin->glWidget);
