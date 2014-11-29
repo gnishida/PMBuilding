@@ -24,7 +24,7 @@ void PMBuildingFactory::initialize() {
 	initialized = true;
 }
 
-void PMBuildingFactory::generate(VBORenderManager& rendManager, Building& building) {
+void PMBuildingFactory::generate(VBORenderManager& rendManager, const QString& geoName, Building& building) {
 	initialize();
 
 	float dx = (building.footprint.contour[1] - building.footprint.contour[0]).length();
@@ -100,38 +100,38 @@ void PMBuildingFactory::generate(VBORenderManager& rendManager, Building& buildi
 		numCylinders = numCylinders>20?20:numCylinders;
 		float shiftY = 0;
 		for (int i = 0; i < numCylinders; i++) {
-			rendManager.addCylinder("3d_building", (i+1)*blockX/(numCylinders+1) * vec1 + towerRadius * 0.5 * vec2 + offset, towerRadius, towerRadius * 0.5f, towerHeigh, textures[6+building.subType*4]);
+			rendManager.addCylinder(geoName, (i+1)*blockX/(numCylinders+1) * vec1 + towerRadius * 0.5 * vec2 + offset, towerRadius, towerRadius * 0.5f, towerHeigh, textures[6+building.subType*4]);
 			Loop3D pts;
 			QVector3D pt = ((i+1)*blockX/(numCylinders+1)-tubesWidth/2.0) * vec1 + towerRadius * 0.5 * vec2 + offset;
 			pts.push_back(pt);
 			pts.push_back(pt + tubesWidth * vec1);
 			pts.push_back(pt + tubesWidth * vec1 + (towerRadius * 0.5 + distTubes) * vec2);
 			pts.push_back(pt + (towerRadius * 0.5 + distTubes) * vec2);
-			rendManager.addBox("3d_building", offset + ((i+1)*blockX/(numCylinders+1)-tubesWidth/2.0f) * vec1 + towerRadius/2 * vec2, vec1 * tubesWidth, vec2 * (towerRadius+distTubes), QVector3D(0, 0, tubesWidth), textures[1]);
+			rendManager.addBox(geoName, offset + ((i+1)*blockX/(numCylinders+1)-tubesWidth/2.0f) * vec1 + towerRadius/2 * vec2, vec1 * tubesWidth, vec2 * (towerRadius+distTubes), tubesWidth, textures[1]);
 		}
 		shiftY += towerRadius / 2 + towerRadius + distTubes;
 
 		// ビル１
 		for (int f = 1; f < 5; f++) {
 			if (f == 2 || f == 4) {
-				rendManager.addBox("3d_building", offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), QVector3D(0, 0, buld1Height), textures[6+building.subType*4+3], f);
+				rendManager.addBox(geoName, offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), buld1Height, textures[6+building.subType*4+3], f);
 			} else {
-				rendManager.addBox("3d_building", offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), QVector3D(0, 0, buld1Height), textures[6+building.subType*4+1], f, 0, 0, floor(blockX/buld1TexWidth)+1.0f, 1);
+				rendManager.addBox(geoName, offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), buld1Height, textures[6+building.subType*4+1], f, 0, 0, floor(blockX/buld1TexWidth)+1.0f, 1);
 			}
 		}
-		rendManager.addBox("3d_building", offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), QVector3D(0, 0, buld1Height), textures[3], 5, 0, 0, floor(blockX/roofBuld1Width)+1.0f, 1);
+		rendManager.addBox(geoName, offset + margin1X * vec1 + shiftY * vec2, vec1 * (blockX-margin1X*2), vec2 * (buld1Y), buld1Height, textures[3], 5, 0, 0, floor(blockX/roofBuld1Width)+1.0f, 1);
 		shiftY += buld1Y;
 
 		// ビル２
 		if (drawBld2) {
 			for (int f = 1; f < 5; f++) {
 				if (f == 2 || f == 4) {
-					rendManager.addBox("3d_building", offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, QVector3D(0, 0, buld2Height), textures[2], f);
+					rendManager.addBox(geoName, offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, buld2Height, textures[2], f);
 				} else {
-					rendManager.addBox("3d_building", offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, QVector3D(0, 0, buld2Height), textures[2], f, 0, 0, floor(blockX/buld2TexWidth)+1.0f, 1);
+					rendManager.addBox(geoName, offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, buld2Height, textures[2], f, 0, 0, floor(blockX/buld2TexWidth)+1.0f, 1);
 				}
 			}
-			rendManager.addBox("3d_building", offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, QVector3D(0, 0, buld2Height), textures[4], 5, 0, 0, floor(blockX/buld2TexWidth)+1.0f, 1);
+			rendManager.addBox(geoName, offset + shiftY * vec2, vec1 * blockX, vec2 * buld2Y, buld2Height, textures[4], 5, 0, 0, floor(blockX/buld2TexWidth)+1.0f, 1);
 			shiftY += buld2Y;
 		}
 
@@ -139,12 +139,12 @@ void PMBuildingFactory::generate(VBORenderManager& rendManager, Building& buildi
 		if ((drawBld3 && sidesY == 0) || (drawBld3Dupl && sidesY == 1)) {
 			for (int f= 1; f < 5; f++) {
 				if (f == 2 || f == 4) {
-					rendManager.addBox("3d_building", offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, QVector3D(0, 0, buld3Height), textures[6+building.subType*4+2], f);
+					rendManager.addBox(geoName, offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, buld3Height, textures[6+building.subType*4+2], f);
 				} else {
-					rendManager.addBox("3d_building", offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, QVector3D(0, 0, buld3Height), textures[6+building.subType*4+2], f, 0, 0, floor(blockX/buld3TexWidth)+1.0f, 1);
+					rendManager.addBox(geoName, offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, buld3Height, textures[6+building.subType*4+2], f, 0, 0, floor(blockX/buld3TexWidth)+1.0f, 1);
 				}
 			}
-			rendManager.addBox("3d_building", offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, QVector3D(0, 0, buld3Height), textures[5], 5, 0, 0, floor(blockX/buld3TexWidth)+1.0f, 1);
+			rendManager.addBox(geoName, offset + margin3X * vec1 + shiftY * vec2, vec1 * (blockX-margin3X*2), vec2 * buld3Y, buld3Height, textures[5], 5, 0, 0, floor(blockX/buld3TexWidth)+1.0f, 1);
 			shiftY += buld3Y;
 		}
 	}

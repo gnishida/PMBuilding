@@ -311,7 +311,9 @@ void VBORenderManager::addBox(const QString& geoName, const QVector3D& center, c
 	addStaticGeometry(geoName, vert, "", GL_QUADS, 1|mode_Lighting);
 }
 
-void VBORenderManager::addBox(const QString& geoName, const QVector3D& offset, const QVector3D& vec1, const QVector3D& vec2, const QVector3D& vec3, const QString& textureName, int faceNo, float s0, float t0, float s1, float t1) {
+void VBORenderManager::addBox(const QString& geoName, const QVector3D& offset, const QVector3D& vec1, const QVector3D& vec2, float height, const QString& textureName, int faceNo, float s0, float t0, float s1, float t1) {
+	QVector3D vec3(0, 0, height);
+
 	std::vector<QVector3D> pts;
 	pts.push_back(offset);
 	pts.push_back(offset + vec1);
@@ -324,29 +326,29 @@ void VBORenderManager::addBox(const QString& geoName, const QVector3D& offset, c
 	pts.push_back(offset + vec2 + vec3);
 
 	std::vector<Vertex> verts;
-	if (faceNo == 2 || faceNo == 0) { // 背面
-		verts.push_back(Vertex(pts[2], QColor(), vec2.normalized(), QVector3D(s0, t0, 0)));
-		verts.push_back(Vertex(pts[3], QColor(), vec2.normalized(), QVector3D(s1, t0, 0)));
-		verts.push_back(Vertex(pts[7], QColor(), vec2.normalized(), QVector3D(s1, t1, 0)));
-		verts.push_back(Vertex(pts[6], QColor(), vec2.normalized(), QVector3D(s0, t1, 0)));
-	}
-	if (faceNo == 4 || faceNo == 0) { // 前面
-		verts.push_back(Vertex(pts[0], QColor(), -vec2.normalized(), QVector3D(s0, t0, 0)));
-		verts.push_back(Vertex(pts[1], QColor(), -vec2.normalized(), QVector3D(s1, t0, 0)));
-		verts.push_back(Vertex(pts[5], QColor(), -vec2.normalized(), QVector3D(s1, t1, 0)));
-		verts.push_back(Vertex(pts[4], QColor(), -vec2.normalized(), QVector3D(s0, t1, 0)));
-	}
-	if (faceNo == 1 || faceNo == 0) { // 右面
+	if (faceNo == 2 || faceNo == 0) { // 右面
 		verts.push_back(Vertex(pts[1], QColor(), vec1.normalized(), QVector3D(s0, t0, 0)));
 		verts.push_back(Vertex(pts[2], QColor(), vec1.normalized(), QVector3D(s1, t0, 0)));
 		verts.push_back(Vertex(pts[6], QColor(), vec1.normalized(), QVector3D(s1, t1, 0)));
 		verts.push_back(Vertex(pts[5], QColor(), vec1.normalized(), QVector3D(s0, t1, 0)));
 	}
-	if (faceNo == 3 || faceNo == 0) { // 左面
-		verts.push_back(Vertex(pts[3], QColor(), vec1.normalized(), QVector3D(s0, t0, 0)));
-		verts.push_back(Vertex(pts[0], QColor(), vec1.normalized(), QVector3D(s1, t0, 0)));
-		verts.push_back(Vertex(pts[4], QColor(), vec1.normalized(), QVector3D(s1, t1, 0)));
-		verts.push_back(Vertex(pts[7], QColor(), vec1.normalized(), QVector3D(s0, t1, 0)));
+	if (faceNo == 4 || faceNo == 0) { // 左面
+		verts.push_back(Vertex(pts[3], QColor(), -vec1.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[0], QColor(), -vec1.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[4], QColor(), -vec1.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[7], QColor(), -vec1.normalized(), QVector3D(s0, t1, 0)));
+	}
+	if (faceNo == 1 || faceNo == 0) { // 背面
+		verts.push_back(Vertex(pts[2], QColor(), vec2.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[3], QColor(), vec2.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[7], QColor(), vec2.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[6], QColor(), vec2.normalized(), QVector3D(s0, t1, 0)));
+	}
+	if (faceNo == 3 || faceNo == 0) { // 正面
+		verts.push_back(Vertex(pts[0], QColor(), -vec2.normalized(), QVector3D(s0, t0, 0)));
+		verts.push_back(Vertex(pts[1], QColor(), -vec2.normalized(), QVector3D(s1, t0, 0)));
+		verts.push_back(Vertex(pts[5], QColor(), -vec2.normalized(), QVector3D(s1, t1, 0)));
+		verts.push_back(Vertex(pts[4], QColor(), -vec2.normalized(), QVector3D(s0, t1, 0)));
 	}
 	if (faceNo == 5 || faceNo == 0) { // 上面
 		verts.push_back(Vertex(pts[4], QColor(), vec3.normalized(), QVector3D(s0, t0, 0)));

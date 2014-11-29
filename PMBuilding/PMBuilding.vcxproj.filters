@@ -92,7 +92,7 @@
       <Filter>VBO</Filter>
     </ClCompile>
     <ClCompile Include="PMBuildingSchool.cpp">
-      <Filter>Generated Files</Filter>
+      <Filter>VBO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +162,7 @@
       <Filter>VBO</Filter>
     </ClInclude>
     <ClInclude Include="PMBuildingSchool.h">
-      <Filter>Generated Files</Filter>
+      <Filter>VBO</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

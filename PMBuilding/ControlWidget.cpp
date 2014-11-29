@@ -42,25 +42,25 @@ void ControlWidget::generate() {
 		building.footprint.push_back(QVector3D(5, -8, 0));
 		building.footprint.push_back(QVector3D(5, 8, 0));
 		building.footprint.push_back(QVector3D(-5, 8, 0));
-		PMBuildingHouse::generate(mainWin->glWidget->vboRenderManager, building);
+		PMBuildingHouse::generate(mainWin->glWidget->vboRenderManager, "3d_building", building);
 	} else if (building.bldType == 1) {
 		building.footprint.push_back(QVector3D(-10, -10, 0));
 		building.footprint.push_back(QVector3D(10, -10, 0));
 		building.footprint.push_back(QVector3D(10, 10, 0));
 		building.footprint.push_back(QVector3D(-10, 10, 0));
-		PMBuildingTower::generate(mainWin->glWidget->vboRenderManager, building);
+		PMBuildingTower::generate(mainWin->glWidget->vboRenderManager, "3d_building", building);
 	} else if (building.bldType == 2) {
 		building.footprint.push_back(QVector3D(-20, -20, 0));
 		building.footprint.push_back(QVector3D(20, -20, 0));
 		building.footprint.push_back(QVector3D(20, 20, 0));
 		building.footprint.push_back(QVector3D(-20, 20, 0));
-		PMBuildingFactory::generate(mainWin->glWidget->vboRenderManager, building);
+		PMBuildingFactory::generate(mainWin->glWidget->vboRenderManager, "3d_building", building);
 	} else if (building.bldType == 3) {
 		building.footprint.push_back(QVector3D(-20, -20, 0));
 		building.footprint.push_back(QVector3D(20, -20, 0));
 		building.footprint.push_back(QVector3D(20, 20, 0));
 		building.footprint.push_back(QVector3D(-20, 20, 0));
-		PMBuildingSchool::generate(mainWin->glWidget->vboRenderManager, building);
+		PMBuildingSchool::generate(mainWin->glWidget->vboRenderManager, "3d_building", building);
 	}
 
 	mainWin->glWidget->shadow.makeShadowMap(mainWin->glWidget);

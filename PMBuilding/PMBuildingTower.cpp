@@ -93,7 +93,7 @@ void PMBuildingTower::calculateColumnContour(std::vector<QVector3D>& currentCont
 	}
 }//
 
-void PMBuildingTower::addWindow(VBORenderManager& rendManager, int windowTexId, QVector3D initPoint,QVector3D dirR,QVector3D dirUp,float width,float height) {
+void PMBuildingTower::addWindow(VBORenderManager& rendManager, const QString& geoName, int windowTexId, const QVector3D& initPoint, const QVector3D& dirR, const QVector3D& dirUp, float width, float height) {
 	std::vector<Vertex> vertWind;
 
 	float depth = 2.0f;
@@ -136,7 +136,7 @@ void PMBuildingTower::addWindow(VBORenderManager& rendManager, int windowTexId, 
 	vertWind.push_back(Vertex(vert[5],color,norm,QVector3D()));
 	vertWind.push_back(Vertex(vert[4],color,norm,QVector3D()));
 	vertWind.push_back(Vertex(vert[1],color,norm,QVector3D()));
-	rendManager.addStaticGeometry("3d_building", vertWind, "", GL_QUADS, 1|mode_Lighting);
+	rendManager.addStaticGeometry(geoName, vertWind, "", GL_QUADS, 1|mode_Lighting);
 	// BACK
 	vertWind.clear();
 	norm=QVector3D::crossProduct(vert[4]-vert[1],vert[2]-vert[1]);
@@ -145,10 +145,10 @@ void PMBuildingTower::addWindow(VBORenderManager& rendManager, int windowTexId, 
 	vertWind.push_back(Vertex(vert[7],color,norm,QVector3D(1,1,0)));
 	vertWind.push_back(Vertex(vert[2],color,norm,QVector3D(0,1,0)));
 
-	rendManager.addStaticGeometry("3d_building", vertWind, windowTex[windowTexId], GL_QUADS, 2|mode_Lighting);
+	rendManager.addStaticGeometry(geoName, vertWind, windowTex[windowTexId], GL_QUADS, 2|mode_Lighting);
 }
 
-void PMBuildingTower::addColumnGeometry(VBORenderManager& rendManager, std::vector<QVector3D>& columnContour, int randomFacade, int windowTexId, float uS, float vS, float height, int numFloors) {
+void PMBuildingTower::addColumnGeometry(VBORenderManager& rendManager, const QString& geoName, std::vector<QVector3D>& columnContour, int randomFacade, int windowTexId, float uS, float vS, float height, int numFloors) {
 	std::vector<Vertex> vert;
 
 	float verticalHoleSize = 0.5;
@@ -197,15 +197,15 @@ void PMBuildingTower::addColumnGeometry(VBORenderManager& rendManager, std::vect
 				vert.push_back(Vertex(columnContour[ind2]+QVector3D(0,0,h2)-dirW*horHoleSize,QColor(),norm,QVector3D((accPerimeter+sideLenght-horHoleSize)*uS,h2*vS,0.0f)));
 
 				////////// INSIDE
-				addWindow(rendManager, windowTexId, columnContour[ind1]+QVector3D(0,0,h1)+dirW*horHoleSize, dirW, QVector3D(0,0,1.0f), sideLenght-2*horHoleSize, h2-h1);
+				addWindow(rendManager, geoName, windowTexId, columnContour[ind1]+QVector3D(0,0,h1)+dirW*horHoleSize, dirW, QVector3D(0,0,1.0f), sideLenght-2*horHoleSize, h2-h1);
 			}
 		}
 		accPerimeter+=sideLenght;
 	}
-	rendManager.addStaticGeometry("3d_building",vert,facadeTex[randomFacade],GL_QUADS,2|mode_Lighting);
+	rendManager.addStaticGeometry(geoName,vert,facadeTex[randomFacade],GL_QUADS,2|mode_Lighting);
 }
 
-void PMBuildingTower::generate(VBORenderManager& rendManager, Building& building) {
+void PMBuildingTower::generate(VBORenderManager& rendManager, const QString& geoName, Building& building) {
 	initialize();
 
 	float boxSize = 1.0f;
@@ -217,8 +217,8 @@ void PMBuildingTower::generate(VBORenderManager& rendManager, Building& building
 	building.footprint.computeInset(-boxSize, roofContour, false); 
 
 	// １階部分を構築
-	rendManager.addPrism("3d_building", building.footprint.contour, 0, firstFloorHeight, building.color, false);
-	rendManager.addPrism("3d_building", roofContour, firstFloorHeight, firstFloorHeight + boxSize, building.color, true);
+	rendManager.addPrism(geoName, building.footprint.contour, 0, firstFloorHeight, building.color, false);
+	rendManager.addPrism(geoName, roofContour, firstFloorHeight, firstFloorHeight + boxSize, building.color, true);
 
 	// ファサードのcontourを計算する
 	std::vector<QVector3D> columnContour;
@@ -229,11 +229,11 @@ void PMBuildingTower::generate(VBORenderManager& rendManager, Building& building
 	float uS = facadeScale[randomFacade].x();
 	float vS = facadeScale[randomFacade].y();
 	int windowTexId = ((int)qrand()) % windowTex.size();
-	addColumnGeometry(rendManager, columnContour, randomFacade, windowTexId, uS, vS, firstFloorHeight + boxSize, building.numStories-1);
+	addColumnGeometry(rendManager, geoName, columnContour, randomFacade, windowTexId, uS, vS, firstFloorHeight + boxSize, building.numStories-1);
 
 	// 屋根を追加する
-	rendManager.addPrism("3d_building", roofContour, buildingHeight, buildingHeight + boxSize, building.color, false);
-	rendManager.addPolygon("3d_building", roofContour, buildingHeight, building.color, true);
-	rendManager.addPolygon("3d_building", roofContour, buildingHeight + boxSize, roofTex[building.roofTextureId], QVector3D(1, 1, 1));
+	rendManager.addPrism(geoName, roofContour, buildingHeight, buildingHeight + boxSize, building.color, false);
+	rendManager.addPolygon(geoName, roofContour, buildingHeight, building.color, true);
+	rendManager.addPolygon(geoName, roofContour, buildingHeight + boxSize, roofTex[building.roofTextureId], QVector3D(1, 1, 1));
 }
 

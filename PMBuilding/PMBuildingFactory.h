@@ -13,6 +13,6 @@ public:
 
 public:
 	static void initialize();
-	static void generate(VBORenderManager& rendManager, Building& building);
+	static void generate(VBORenderManager& rendManager, const QString& geoName, Building& building);
 };
 

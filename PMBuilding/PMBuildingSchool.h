@@ -13,8 +13,8 @@ public:
 
 public:
 	static void initialize();
-	static void generate(VBORenderManager& rendManager, Building& building);
-	static void generateType0(VBORenderManager& rendManager, Building& building);
+	static void generate(VBORenderManager& rendManager, const QString& geoName, Building& building);
+	static void generateType0(VBORenderManager& rendManager, const QString& geoName, Building& building);
 	//static void generateType1(VBORenderManager& rendManager, Building& building);
 };
 
