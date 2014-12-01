@@ -42,14 +42,16 @@ void PMBuildingRB::generate(VBORenderManager& rendManager, const QString& geoNam
 }
 
 void PMBuildingRB::generateType0(VBORenderManager& rendManager, const QString& geoName, Building& building) {
-	float dx = (building.footprint.contour[1] - building.footprint.contour[0]).length();
-	float dy = (building.footprint.contour[2] - building.footprint.contour[1]).length();
-	QVector3D vec1 = (building.footprint.contour[1] - building.footprint.contour[0]).normalized();
-	QVector3D vec2 = (building.footprint.contour[2] - building.footprint.contour[1]).normalized();	
+	Loop3D rectangle = building.buildingFootprint.inscribedOBB();
+
+	float dx = (rectangle[1] - rectangle[0]).length();
+	float dy = (rectangle[2] - rectangle[1]).length();
+	QVector3D vec1 = (rectangle[1] - rectangle[0]).normalized();
+	QVector3D vec2 = (rectangle[2] - rectangle[1]).normalized();	
 
 	float dyOrig = dy;
 	float dxOrig = dx;
-	QVector3D offset = building.footprint.contour[0];
+	QVector3D offset = rectangle[0];
 
 	////
 	//roofTex=bestTextureForRoof(dxOrig,dyOrig);
@@ -110,14 +112,16 @@ void PMBuildingRB::generateType0(VBORenderManager& rendManager, const QString& g
 }
 
 void PMBuildingRB::generateType1(VBORenderManager& rendManager, const QString& geoName, Building& building) {
-	float dx = (building.footprint.contour[1] - building.footprint.contour[0]).length();
-	float dy = (building.footprint.contour[2] - building.footprint.contour[1]).length();
-	QVector3D vec1 = (building.footprint.contour[1] - building.footprint.contour[0]).normalized();
-	QVector3D vec2 = (building.footprint.contour[2] - building.footprint.contour[1]).normalized();	
+	Loop3D rectangle = building.buildingFootprint.inscribedOBB();
+
+	float dx = (rectangle[1] - rectangle[0]).length();
+	float dy = (rectangle[2] - rectangle[1]).length();
+	QVector3D vec1 = (rectangle[1] - rectangle[0]).normalized();
+	QVector3D vec2 = (rectangle[2] - rectangle[1]).normalized();	
 
 	float dyOrig = dy;
 	float dxOrig = dx;
-	QVector3D offset = building.footprint.contour[0];
+	QVector3D offset = rectangle[0];
 
 	Polygon3D allRoof;
 

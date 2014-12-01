@@ -22,54 +22,57 @@ void PMBuildingHouse::initialize() {
 void PMBuildingHouse::generate(VBORenderManager& rendManager, const QString& geoName, Building& building) {
 	initialize();
 
+	Loop3D rectangle = building.buildingFootprint.inscribedOBB();
+
 	float floorHeight = 2.5f;
 	float margin = 0.2f;
 
-	QVector3D vec1 = (building.footprint.contour[1] - building.footprint.contour[0]).normalized();
-	QVector3D vec2 = (building.footprint.contour[2] - building.footprint.contour[1]).normalized();
+	QVector3D vec1 = (rectangle[1] - rectangle[0]).normalized();
+	QVector3D vec2 = (rectangle[2] - rectangle[1]).normalized();
+	float z = rectangle[0].z();
 
 	// １階の扉の上まで
 	{
 		Loop3D polygon1;
-		polygon1.push_back(building.footprint.contour[0]);
-		polygon1.push_back(building.footprint.contour[1]);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 0.5f);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 0.5f - vec1 * margin);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 6.0f - vec1 * margin);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 6.0f);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 6.5f);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 7.0f - vec1 * 1.6f);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 7.0f - vec1 * 1.8f);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 8.3f - vec1 * 1.8f);
-		polygon1.push_back(building.footprint.contour[1] + vec2 * 8.3f - vec1 * 1.6f);
-		polygon1.push_back(building.footprint.contour[2] - vec1 * 1.6f);
-		polygon1.push_back(building.footprint.contour[3]);
+		polygon1.push_back(rectangle[0]);
+		polygon1.push_back(rectangle[1]);
+		polygon1.push_back(rectangle[1] + vec2 * 0.5f);
+		polygon1.push_back(rectangle[1] + vec2 * 0.5f - vec1 * margin);
+		polygon1.push_back(rectangle[1] + vec2 * 6.0f - vec1 * margin);
+		polygon1.push_back(rectangle[1] + vec2 * 6.0f);
+		polygon1.push_back(rectangle[1] + vec2 * 6.5f);
+		polygon1.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f);
+		polygon1.push_back(rectangle[1] + vec2 * 7.0f - vec1 * 1.6f);
+		polygon1.push_back(rectangle[1] + vec2 * 7.0f - vec1 * 1.8f);
+		polygon1.push_back(rectangle[1] + vec2 * 8.3f - vec1 * 1.8f);
+		polygon1.push_back(rectangle[1] + vec2 * 8.3f - vec1 * 1.6f);
+		polygon1.push_back(rectangle[2] - vec1 * 1.6f);
+		polygon1.push_back(rectangle[3]);
 	
-		rendManager.addPrism(geoName, polygon1, 0, floorHeight, textures[0]);
+		rendManager.addPrism(geoName, polygon1, z, z + floorHeight, textures[0]);
 	}
 
 	// １階扉とガレージ
 	{
-		QVector3D normal = (building.footprint.contour[1] - building.footprint.contour[0]).normalized();
+		QVector3D normal = (rectangle[1] - rectangle[0]).normalized();
 		std::vector<Vertex> pts(4);
-		pts[0] = Vertex(building.footprint.contour[1] + vec2 * 0.5f - vec1 * 0.1f, QColor(), normal, QVector3D(0, 0, 0));
-		pts[1] = Vertex(building.footprint.contour[1] + vec2 * 6.0f - vec1 * 0.1f, QColor(), normal, QVector3D(5.5, 0, 0));
-		pts[2] = Vertex(building.footprint.contour[1] + vec2 * 6.0f - vec1 * 0.1f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(5.5, floorHeight, 0));
-		pts[3] = Vertex(building.footprint.contour[1] + vec2 * 0.5f - vec1 * 0.1f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(0, floorHeight, 0));
+		pts[0] = Vertex(rectangle[1] + vec2 * 0.5f - vec1 * 0.1f, QColor(), normal, QVector3D(0, 0, 0));
+		pts[1] = Vertex(rectangle[1] + vec2 * 6.0f - vec1 * 0.1f, QColor(), normal, QVector3D(5.5, 0, 0));
+		pts[2] = Vertex(rectangle[1] + vec2 * 6.0f - vec1 * 0.1f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(5.5, floorHeight, 0));
+		pts[3] = Vertex(rectangle[1] + vec2 * 0.5f - vec1 * 0.1f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(0, floorHeight, 0));
 		rendManager.addStaticGeometry(geoName, pts, textures[2], GL_QUADS, 2|mode_Lighting);
 
-		pts[0] = Vertex(building.footprint.contour[1] + vec2 * 7.0f - vec1 * 1.7f, QColor(), normal, QVector3D(0, 0, 0));
-		pts[1] = Vertex(building.footprint.contour[1] + vec2 * 8.3f - vec1 * 1.7f, QColor(), normal, QVector3D(1, 0, 0));
-		pts[2] = Vertex(building.footprint.contour[1] + vec2 * 8.3f - vec1 * 1.7f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(1, 1, 0));
-		pts[3] = Vertex(building.footprint.contour[1] + vec2 * 7.0f - vec1 * 1.7f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(0, 1, 0));
+		pts[0] = Vertex(rectangle[1] + vec2 * 7.0f - vec1 * 1.7f, QColor(), normal, QVector3D(0, 0, 0));
+		pts[1] = Vertex(rectangle[1] + vec2 * 8.3f - vec1 * 1.7f, QColor(), normal, QVector3D(1, 0, 0));
+		pts[2] = Vertex(rectangle[1] + vec2 * 8.3f - vec1 * 1.7f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(1, 1, 0));
+		pts[3] = Vertex(rectangle[1] + vec2 * 7.0f - vec1 * 1.7f + QVector3D(0, 0, floorHeight), QColor(), normal, QVector3D(0, 1, 0));
 		rendManager.addStaticGeometry(geoName, pts, textures[1], GL_QUADS, 2|mode_Lighting);
 	}
 
 	// １階出窓
 	{
-		QVector3D pt1 = (building.footprint[1] + vec2 * 6.5 + building.footprint[2]) * 0.5 - vec1 * 1.6 - vec2 * 1.5;
-		pt1.setZ(1);
+		QVector3D pt1 = (rectangle[1] + vec2 * 6.5 + rectangle[2]) * 0.5 - vec1 * 1.6 - vec2 * 1.5;
+		pt1.setZ(z + 1);
 		QVector3D pt2 = pt1 + vec2 * 3.0;
 		QVector3D pt3 = pt2 + QVector3D(0, 0, 1.5);
 		QVector3D pt4 = pt1 + QVector3D(0, 0, 1.5);
@@ -143,52 +146,52 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, const QString& geo
 	// １階の扉の上から２階の窓の下まで
 	{
 		Loop3D polygon;
-		polygon.push_back(building.footprint.contour[0]);
-		polygon.push_back(building.footprint.contour[1]);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f);
-		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
-		polygon.push_back(building.footprint.contour[3]);
+		polygon.push_back(rectangle[0]);
+		polygon.push_back(rectangle[1]);
+		polygon.push_back(rectangle[1] + vec2 * 6.5f);
+		polygon.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f);
+		polygon.push_back(rectangle[2] - vec1 * 1.6f);
+		polygon.push_back(rectangle[3]);
 	
-		rendManager.addPrism(geoName, polygon, floorHeight, 3.5f, textures[0]);
+		rendManager.addPrism(geoName, polygon, z + floorHeight, z + 3.5f, textures[0]);
 	}
 
 	// 日よけ
 	{
 		Loop3D polygon;
 		polygon.resize(4);
-		polygon[0] = building.footprint.contour[2];
-		polygon[0].setZ(2.8);
-		polygon[1] = building.footprint.contour[2] - vec1 * 1.6f;
-		polygon[1].setZ(3.2);
-		polygon[2] = building.footprint.contour[1] - vec1 * 1.6f + vec2 * 6.5f;
-		polygon[2].setZ(3.2);
-		polygon[3] = building.footprint.contour[1] + vec2 * 6.5f;
-		polygon[3].setZ(2.8);
+		polygon[0] = rectangle[2];
+		polygon[0].setZ(z + 2.8);
+		polygon[1] = rectangle[2] - vec1 * 1.6f;
+		polygon[1].setZ(z + 3.2);
+		polygon[2] = rectangle[1] - vec1 * 1.6f + vec2 * 6.5f;
+		polygon[2].setZ(z + 3.2);
+		polygon[3] = rectangle[1] + vec2 * 6.5f;
+		polygon[3].setZ(z + 2.8);
 		rendManager.addQuad(geoName, polygon, textures[3]);
 	}
 
 	// ２階の窓を含む壁
 	{
 		Loop3D polygon;
-		polygon.push_back(building.footprint.contour[0]);
+		polygon.push_back(rectangle[0]);
 
 		{
-			float length = (building.footprint.contour[1] - building.footprint.contour[0]).length();
+			float length = (rectangle[1] - rectangle[0]).length();
 
 			for (int i = 0; i < (int)((length - 2) / 3); ++i) {
-				polygon.push_back(building.footprint.contour[0] + vec1 * (3.0f + i * 3.0));
-				polygon.push_back(building.footprint.contour[0] + vec1 * (3.0f + i * 3.0) + vec2 * margin);
-				polygon.push_back(building.footprint.contour[0] + vec1 * (3.0f + i * 3.0 + 1.5) + vec2 * margin);
-				polygon.push_back(building.footprint.contour[0] + vec1 * (3.0f + i * 3.0 + 1.5));
+				polygon.push_back(rectangle[0] + vec1 * (3.0f + i * 3.0));
+				polygon.push_back(rectangle[0] + vec1 * (3.0f + i * 3.0) + vec2 * margin);
+				polygon.push_back(rectangle[0] + vec1 * (3.0f + i * 3.0 + 1.5) + vec2 * margin);
+				polygon.push_back(rectangle[0] + vec1 * (3.0f + i * 3.0 + 1.5));
 
 				{ // 窓
 					Loop3D pts;
 					pts.resize(4);
-					pts[0] = building.footprint.contour[0] + vec1 * (3.0f + i * 3.0) + vec2 * 0.1;
-					pts[0].setZ(3.5);
-					pts[1] = building.footprint.contour[0] + vec1 * (3.0f + i * 3.0 + 1.5) + vec2 * 0.1;
-					pts[1].setZ(3.5);
+					pts[0] = rectangle[0] + vec1 * (3.0f + i * 3.0) + vec2 * 0.1;
+					pts[0].setZ(z + 3.5);
+					pts[1] = rectangle[0] + vec1 * (3.0f + i * 3.0 + 1.5) + vec2 * 0.1;
+					pts[1].setZ(z + 3.5);
 					pts[2] = pts[1] + QVector3D(0, 0, 1.5);
 					pts[3] = pts[0] + QVector3D(0, 0, 1.5);
 
@@ -203,21 +206,21 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, const QString& geo
 			}
 		}
 
-		polygon.push_back(building.footprint.contour[1]);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 2.5f);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 2.5f - vec1 * margin);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 4.0f - vec1 * margin);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 4.0f);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f);
+		polygon.push_back(rectangle[1]);
+		polygon.push_back(rectangle[1] + vec2 * 2.5f);
+		polygon.push_back(rectangle[1] + vec2 * 2.5f - vec1 * margin);
+		polygon.push_back(rectangle[1] + vec2 * 4.0f - vec1 * margin);
+		polygon.push_back(rectangle[1] + vec2 * 4.0f);
+		polygon.push_back(rectangle[1] + vec2 * 6.5f);
+		polygon.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f);
 	
 		{ // 窓
 			Loop3D pts;
 			pts.resize(4);
-			pts[0] = building.footprint.contour[1] + vec2 * 2.5f - vec1 * 0.1f;
-			pts[0].setZ(3.5);
-			pts[1] = building.footprint.contour[1] + vec2 * 4.0f - vec1 * 0.1f;
-			pts[1].setZ(3.5);
+			pts[0] = rectangle[1] + vec2 * 2.5f - vec1 * 0.1f;
+			pts[0].setZ(z + 3.5);
+			pts[1] = rectangle[1] + vec2 * 4.0f - vec1 * 0.1f;
+			pts[1].setZ(z + 3.5);
 			pts[2] = pts[1] + QVector3D(0, 0, 1.5);
 			pts[3] = pts[0] + QVector3D(0, 0, 1.5);
 
@@ -231,21 +234,21 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, const QString& geo
 		}
 
 		{
-			float length = (building.footprint.contour[2] - building.footprint.contour[1]).length() - 6.5;
+			float length = (rectangle[2] - rectangle[1]).length() - 6.5;
 
 			for (int i = 0; i < (int)((length - 3) / 3); ++i) {
-				polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0));
-				polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0) - vec1 * margin);
-				polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0 + 1.5) - vec1 * margin);
-				polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0 + 1.5));
+				polygon.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0));
+				polygon.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0) - vec1 * margin);
+				polygon.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0 + 1.5) - vec1 * margin);
+				polygon.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0 + 1.5));
 
 				{ // 窓
 					Loop3D pts;
 					pts.resize(4);
-					pts[0] = building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0) - vec1 * 0.1;
-					pts[0].setZ(3.5);
-					pts[1] = building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0 + 1.5) - vec1 * 0.1;
-					pts[1].setZ(3.5);
+					pts[0] = rectangle[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0) - vec1 * 0.1;
+					pts[0].setZ(z + 3.5);
+					pts[1] = rectangle[1] + vec2 * 6.5f - vec1 * 1.6f + vec2 * (3.0f + i * 3.0 + 1.5) - vec1 * 0.1;
+					pts[1].setZ(z + 3.5);
 					pts[2] = pts[1] + QVector3D(0, 0, 1.5);
 					pts[3] = pts[0] + QVector3D(0, 0, 1.5);
 
@@ -260,60 +263,59 @@ void PMBuildingHouse::generate(VBORenderManager& rendManager, const QString& geo
 			}
 		}
 
-		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
-		polygon.push_back(building.footprint.contour[3]);
+		polygon.push_back(rectangle[2] - vec1 * 1.6f);
+		polygon.push_back(rectangle[3]);
 	
-		rendManager.addPrism(geoName, polygon, 3.5f, 5.0f, textures[0]);
+		rendManager.addPrism(geoName, polygon, z + 3.5f, z + 5.0f, textures[0]);
 	}
 
 	// ２階の窓の上から
 	{
 		Loop3D polygon;
-		polygon.push_back(building.footprint.contour[0]);
-		polygon.push_back(building.footprint.contour[1]);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f - vec1 * 1.6f);
-		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
-		polygon.push_back(building.footprint.contour[3]);
+		polygon.push_back(rectangle[0]);
+		polygon.push_back(rectangle[1]);
+		polygon.push_back(rectangle[1] + vec2 * 6.5f);
+		polygon.push_back(rectangle[1] + vec2 * 6.5f - vec1 * 1.6f);
+		polygon.push_back(rectangle[2] - vec1 * 1.6f);
+		polygon.push_back(rectangle[3]);
 	
-		rendManager.addPrism(geoName, polygon, 5.0f, 6.0f, textures[0]);
+		rendManager.addPrism(geoName, polygon, z + 5.0f, z + 6.0f, textures[0]);
 	}
 
 	// ２階の三角部
 	{
 		Loop3D polygon;
-		polygon.push_back(building.footprint.contour[1]);
-		polygon.push_back(building.footprint.contour[1] + vec2 * 6.5f);
-		rendManager.addTriangle(geoName, polygon, 6.0f, 8.0f, textures[0]);
+		polygon.push_back(rectangle[1]);
+		polygon.push_back(rectangle[1] + vec2 * 6.5f);
+		rendManager.addTriangle(geoName, polygon, z + 6.0f, z + 8.0f, textures[0]);
 	}
 
 	// ２階の三角部
 	{
 		Loop3D polygon;
-		polygon.push_back(building.footprint.contour[2] - vec1 * 1.6f);
-		polygon.push_back(building.footprint.contour[3]);
-		rendManager.addTriangle(geoName, polygon, 6.0f, 8.0f, textures[0]);
+		polygon.push_back(rectangle[2] - vec1 * 1.6f);
+		polygon.push_back(rectangle[3]);
+		rendManager.addTriangle(geoName, polygon, z + 6.0f, z + 8.0f, textures[0]);
 	}
 
 	// 屋根
 	{
 		Loop3D polygon;
-		QVector3D pt1 = QVector3D(building.footprint.contour[0].x(), building.footprint.contour[0].y(), 6.0);
-		QVector3D pt2 = QVector3D(building.footprint.contour[1].x(), building.footprint.contour[1].y(), 6.0);
-		QVector3D pt3 = (building.footprint.contour[1] + building.footprint.contour[1] + vec2 * 6.5f) * 0.5f;
-		pt3.setZ(8.0);
-		QVector3D pt4 = (building.footprint.contour[0] + building.footprint.contour[1] - vec1 * 1.6f) * 0.5f;
-		pt4 += QVector3D(0, 6.5 * 0.5, 0);
-		pt4.setZ(8.0);
+		QVector3D pt1 = QVector3D(rectangle[0].x(), rectangle[0].y(), z + 6.0);
+		QVector3D pt2 = QVector3D(rectangle[1].x(), rectangle[1].y(), z + 6.0);
+		QVector3D pt3 = rectangle[1] + vec2 * 3.25f;
+		pt3.setZ(z + 8.0);
+		QVector3D pt4 = (rectangle[0] + rectangle[1] - vec1 * 1.6f) * 0.5f + vec2 * 3.25;
+		pt4.setZ(z + 8.0);
 		QVector3D pt5 = pt2 +  vec2 * 6.5;
 		QVector3D pt6 = pt5 - vec1 * 1.6f;
-		QVector3D pt7 = building.footprint.contour[2] - vec1 * 1.6f;
-		pt7.setZ(6.0);
-		QVector3D pt8 = QVector3D(building.footprint.contour[3].x(), building.footprint.contour[3].y(), 6.0);
+		QVector3D pt7 = rectangle[2] - vec1 * 1.6f;
+		pt7.setZ(z + 6.0);
+		QVector3D pt8 = QVector3D(rectangle[3].x(), rectangle[3].y(), z + 6.0);
 		QVector3D pt9 = (pt7 + pt8) * 0.5f;
-		pt9.setZ(8.0);
-		QVector3D pt10 = (building.footprint.contour[0] + building.footprint.contour[1] - vec1 * 1.6f) * 0.5f;
-		pt10.setZ(6.0);
+		pt9.setZ(z + 8.0);
+		QVector3D pt10 = (rectangle[0] + rectangle[1] - vec1 * 1.6f) * 0.5f;
+		pt10.setZ(z + 6.0);
 		QVector3D pt11 = pt1 + vec2 * 3.25;
 		QVector3D pt12 = pt6 - vec2 * 3.25;
 		QVector3D pt13 = pt10 + vec2 * 6.5;

@@ -214,15 +214,15 @@ void PMBuildingTower::generate(VBORenderManager& rendManager, const QString& geo
 
 	// roofOffContを作成 (footprintを少し大きくする)
 	Loop3D roofContour;
-	building.footprint.computeInset(-boxSize, roofContour, false); 
+	building.buildingFootprint.computeInset(-boxSize, roofContour, false); 
 
 	// １階部分を構築
-	rendManager.addPrism(geoName, building.footprint.contour, 0, firstFloorHeight, building.color, false);
+	rendManager.addPrism(geoName, building.buildingFootprint.contour, 0, firstFloorHeight, building.color, false);
 	rendManager.addPrism(geoName, roofContour, firstFloorHeight, firstFloorHeight + boxSize, building.color, true);
 
 	// ファサードのcontourを計算する
 	std::vector<QVector3D> columnContour;
-	calculateColumnContour(building.footprint.contour, columnContour);
+	calculateColumnContour(building.buildingFootprint.contour, columnContour);
 
 	// ファサードを追加する
 	int randomFacade = qrand()%facadeTex.size();

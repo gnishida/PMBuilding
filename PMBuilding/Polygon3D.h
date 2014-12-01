@@ -159,11 +159,13 @@ public:
 	static QVector3D getLoopAABB(Loop3D &pin, QVector3D &minCorner, QVector3D &maxCorner);
 	static void getLoopOBB(Loop3D &pin, QVector3D &size, QMatrix4x4 &xformMat);
 	static void getLoopOBB2(Loop3D &pin, QVector3D &size, QMatrix4x4 &xformMat);
+	static Loop3D getLoopOBB3(Loop3D &pin);
 	void getMyOBB(QVector3D &size, QMatrix4x4 &xformMat);
 	static bool segmentSegmentIntersectXY(QVector2D &a, QVector2D &b, QVector2D &c, QVector2D &d, float *tab, float *tcd, bool segmentOnly, QVector2D &intPoint);
 	static void extrudePolygon(Polygon3D &basePgon, float height, std::vector<Polygon3D> &pgonExtrusion);
 	static float distanceXYToPoint(Loop3D &pin, QVector3D &pt);
 	static float distanceXYfromContourAVerticesToContourB(Loop3D &pA, Loop3D &pB);
+	Loop3D inscribedOBB();
 };	
 
 class BBox3D{

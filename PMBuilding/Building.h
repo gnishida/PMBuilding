@@ -6,7 +6,7 @@
 
 class Building {
 public:
-	Polygon3D footprint;
+	Polygon3D buildingFootprint;
 	int bldType;
 	int subType;
 	int numStories;
