@@ -145,8 +145,8 @@ void PMBuildingRB::generateType1(VBORenderManager& rendManager, const QString& g
 	}
 
 	//left side
-	allRoof.contour.push_back(offset + QVector3D(shiftX,sideWidth+pharmDepth+coverDepth,frontHeight));
-	allRoof.contour.push_back(offset + QVector3D(shiftX+dx*2/3,sideWidth+pharmDepth+coverDepth,frontHeight));
+	allRoof.contour.push_back(offset + shiftX * vec1 + (sideWidth+pharmDepth+coverDepth) * vec2);
+	allRoof.contour.push_back(offset + (shiftX+dx*2/3) * vec1 + (sideWidth+pharmDepth+coverDepth) * vec2);
 	rendManager.addBox(geoName, offset + shiftX * vec1 + (sideWidth+pharmDepth+coverDepth) * vec2, dx*2/3*vec1, pharmDepth * vec2, frontHeight, textures[11], 3, 0, 0, floor(dx/(2.0f*frontSideWidth))+1,1.0f);
 	//renderFace(3,new QVector3D(shiftX,sideWidth+pharmDepth+coverDepth,0),dx*2/3,pharmDepth,frontHeight,&normals,&textures,6*subType+5,floor(dx/(2.0f*frontSideWidth))+1,1.0f);//pharmacyFront
 	shiftX+=dx*2/3;
@@ -155,9 +155,9 @@ void PMBuildingRB::generateType1(VBORenderManager& rendManager, const QString& g
 
 	rendManager.addBox(geoName, offset + shiftX * vec1 + (sideWidth+coverDepth) * vec2, pharmWidth * vec1, pharmDepth * vec2, frontHeight, textures[9], 4, 0, 0, 63.0f/375, 1.0f);
 	//renderFace(4,new QVector3D(shiftX,sideWidth+coverDepth,0),pharmWidth,pharmDepth,frontHeight,&normals,&textures,6*subType+3,0,63.0f/375,0,1.0f);//side
-	allRoof.contour.push_back(offset + QVector3D(shiftX,sideWidth+coverDepth,frontHeight));
+	allRoof.contour.push_back(offset + shiftX * vec1 + (sideWidth+coverDepth) * vec2);
 	if (pharm) {
-		allRoof.contour.push_back(offset + QVector3D(shiftX+pharmWidth,sideWidth+coverDepth,frontHeight));
+		allRoof.contour.push_back(offset + shiftX * vec1 + (sideWidth+coverDepth) * vec2);
 		rendManager.addBox(geoName, offset + shiftX * vec1 + (sideWidth+coverDepth) * vec2, pharmWidth * vec1, pharmDepth * vec2, frontHeight, textures[9], 3, 63.0f/375, 0, 319.0f/375, 1.0f);
 		//renderFace(3,new QVector3D(shiftX,sideWidth+coverDepth,0),pharmWidth,pharmDepth,frontHeight,&normals,&textures,6*subType+3,63.0f/375,319.0f/375,0,1.0f);//pharmacyFront
 		shiftX+=pharmWidth-frontLWidth*25/334;
@@ -171,8 +171,8 @@ void PMBuildingRB::generateType1(VBORenderManager& rendManager, const QString& g
 
 
 	//front
-	allRoof.contour.push_back(offset + QVector3D(shiftX+frontLWidth*25/334,coverDepth+0.4f,frontHeight));
-	allRoof.contour.push_back(offset + QVector3D(shiftX+frontLWidth,coverDepth+0.4f,frontHeight));
+	allRoof.contour.push_back(offset + (shiftX+frontLWidth*25/334) * vec1 + (coverDepth+0.4f) * vec2);
+	allRoof.contour.push_back(offset + (shiftX+frontLWidth) * vec1 + (coverDepth+0.4f) * vec2);
 
 	rendManager.addBox(geoName, offset + (shiftX+frontLWidth*25/334) * vec1 + coverDepth * vec2, (frontLWidth-frontLWidth*25/334) * vec1, dyOrig * vec2, frontHeight*51/187, textures[6], 3, 25.0f/334, 0, 1.0f, 51.0f/201.0f);
 	//renderFace(3,new QVector3D(shiftX+frontLWidth*25/334,coverDepth,0),frontLWidth-frontLWidth*25/334,dyOrig,frontHeight*51/187,&normals,&textures,6*subType+0,25.0f/334,1.0f,0,51.0f/201.0f);
@@ -217,8 +217,8 @@ void PMBuildingRB::generateType1(VBORenderManager& rendManager, const QString& g
 
 
 	//back front right
-	allRoof.contour.push_back(offset + QVector3D(shiftX,sideWidth+coverDepth,frontHeight));
-	allRoof.contour.push_back(offset + QVector3D(shiftX+dx/3.0f+frontR,sideWidth+coverDepth,frontHeight));
+	allRoof.contour.push_back(offset + shiftX * vec1 + (sideWidth+coverDepth) * vec2);
+	allRoof.contour.push_back(offset + (shiftX+dx/3.0f+frontR) * vec1 + (sideWidth+coverDepth) * vec2);
 
 	rendManager.addBox(geoName, offset + shiftX * vec1 + (sideWidth+coverDepth) * vec2, (dx/3.0f+frontR) * vec1, sideWidth * vec2, frontHeight, textures[13], 3, 0, 0, floor(dx/(2.0f*frontR2))+1.0f, 1.0f);
 	//renderFace(3,new QVector3D(shiftX,sideWidth+coverDepth,0),dx/3.0f+frontR,sideWidth,frontHeight,&normals,&textures,6*subType+7,floor(dx/(2.0f*frontR2))+1.0f,1.0f);
@@ -234,11 +234,11 @@ void PMBuildingRB::generateType1(VBORenderManager& rendManager, const QString& g
 	rendManager.addBox(geoName, offset + (sideWidth+coverDepth+pharmDepth) * vec2, dxOrig * vec1, dyDepth * vec2, frontHeight, textures[16], 4, 0, 0, floor(dyDepth*136/(frontHeight*319))+1.0f,1.0f);
 	//renderFace(4,new QVector3D(0,sideWidth+coverDepth+pharmDepth,0),dxOrig,dyDepth,frontHeight,&normals,&textures,6*subType+10,floor(dyDepth*136/(frontHeight*319))+1.0f,1.0f);
 
-	allRoof.contour.push_back(offset + QVector3D(dxOrig,dyOrig,frontHeight));
-	allRoof.contour.push_back(offset + QVector3D(0,dyOrig,frontHeight));
+	allRoof.contour.push_back(offset + dxOrig * vec1 + dyOrig * vec2);
+	allRoof.contour.push_back(offset + dyOrig * vec2);
 	/*if(roofTex==-1){
 		roofTex=bestTextureForRoof(dxOrig,dyOrig);
 	}*/
 	//renderFlatRoof(&allRoof,&roofTextures,roofTex);
-	rendManager.addPolygon(geoName, allRoof.contour, frontHeight, textures[17], QVector3D(1, 1, 0));
+	rendManager.addPolygon(geoName, allRoof.contour, offset.z() + frontHeight, textures[17], QVector3D(1, 1, 0));
 }

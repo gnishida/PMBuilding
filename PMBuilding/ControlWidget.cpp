@@ -63,10 +63,10 @@ void ControlWidget::generate() {
 		building.buildingFootprint.push_back(QVector3D(-1412.010864, 891.296692, 70));
 		PMBuildingFactory::generate(mainWin->glWidget->vboRenderManager, "3d_building", building);
 	} else if (building.bldType == 3) {
-		building.buildingFootprint.push_back(QVector3D(-20, -20, 0));
-		building.buildingFootprint.push_back(QVector3D(20, -20, 0));
-		building.buildingFootprint.push_back(QVector3D(20, 20, 0));
-		building.buildingFootprint.push_back(QVector3D(-20, 20, 0));
+		building.buildingFootprint.push_back(QVector3D(-20, -20, 70));
+		building.buildingFootprint.push_back(QVector3D(20, -20, 70));
+		building.buildingFootprint.push_back(QVector3D(20, 20, 70));
+		building.buildingFootprint.push_back(QVector3D(-20, 20, 70));
 		PMBuildingSchool::generate(mainWin->glWidget->vboRenderManager, "3d_building", building);
 	} else if (building.bldType == 4) {
 		building.buildingFootprint.push_back(QVector3D(-20, -20, 0));
