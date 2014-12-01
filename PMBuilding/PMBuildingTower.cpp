@@ -208,6 +208,7 @@ void PMBuildingTower::addColumnGeometry(VBORenderManager& rendManager, const QSt
 void PMBuildingTower::generate(VBORenderManager& rendManager, const QString& geoName, Building& building) {
 	initialize();
 
+	float z = building.buildingFootprint.contour[0].z();
 	float boxSize = 1.0f;
 	float firstFloorHeight = 4.8f;
 	float buildingHeight = (building.numStories - 1) * storyHeight + firstFloorHeight + boxSize;//just one box size (1st-2nd)
@@ -217,8 +218,8 @@ void PMBuildingTower::generate(VBORenderManager& rendManager, const QString& geo
 	building.buildingFootprint.computeInset(-boxSize, roofContour, false); 
 
 	// １階部分を構築
-	rendManager.addPrism(geoName, building.buildingFootprint.contour, 0, firstFloorHeight, building.color, false);
-	rendManager.addPrism(geoName, roofContour, firstFloorHeight, firstFloorHeight + boxSize, building.color, true);
+	rendManager.addPrism(geoName, building.buildingFootprint.contour, z, z + firstFloorHeight, building.color, false);
+	rendManager.addPrism(geoName, roofContour, z + firstFloorHeight, z + firstFloorHeight + boxSize, building.color, true);
 
 	// ファサードのcontourを計算する
 	std::vector<QVector3D> columnContour;
@@ -232,8 +233,8 @@ void PMBuildingTower::generate(VBORenderManager& rendManager, const QString& geo
 	addColumnGeometry(rendManager, geoName, columnContour, randomFacade, windowTexId, uS, vS, firstFloorHeight + boxSize, building.numStories-1);
 
 	// 屋根を追加する
-	rendManager.addPrism(geoName, roofContour, buildingHeight, buildingHeight + boxSize, building.color, false);
-	rendManager.addPolygon(geoName, roofContour, buildingHeight, building.color, true);
-	rendManager.addPolygon(geoName, roofContour, buildingHeight + boxSize, roofTex[building.roofTextureId], QVector3D(1, 1, 1));
+	rendManager.addPrism(geoName, roofContour, z + buildingHeight, z + buildingHeight + boxSize, building.color, false);
+	rendManager.addPolygon(geoName, roofContour, z + buildingHeight, building.color, true);
+	rendManager.addPolygon(geoName, roofContour, z + buildingHeight + boxSize, roofTex[rand()%roofTex.size()], QVector3D(1, 1, 1));
 }
 

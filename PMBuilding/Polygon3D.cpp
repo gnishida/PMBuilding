@@ -708,7 +708,6 @@ void Polygon3D::getLoopOBB2(Loop3D &pin, QVector3D &size, QMatrix4x4 &xformMat){
 
 /**
  * Get polygon oriented bounding box
- * xformMat is a matrix that transform the oriented bounding box to the original polygon.
  */
 Loop3D Polygon3D::getLoopOBB3(Loop3D &pin) {
 	float alpha = 0.0f;			
